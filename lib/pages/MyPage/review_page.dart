@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../styles/colors.dart';
 import '../../widgets/employer_note_tab_bar.dart';
-import '../../widgets/safe_back_app_bar.dart';
 import 'review_detail_page.dart';
 
+/// 프로필 하위 리뷰 화면. MyPage 안에서 인라인으로 표시되어
+/// 하단 네비게이션 바가 유지되도록 Scaffold를 사용하지 않는다.
+/// 뒤로가기는 nav 바에서 Profile 탭을 다시 누르면 발생한다.
 class ReviewPage extends StatefulWidget {
   const ReviewPage({super.key});
 
@@ -16,6 +18,9 @@ class _ReviewPageState extends State<ReviewPage> {
   int _selectedTab = 0;
 
   static const List<String> _tabs = ['My Reviews', 'Received'];
+
+  /// 본문 배경: #F4BFB3 @ 11% (헤더와 탭바는 흰색 유지)
+  static final Color _bodyBg = const Color(0xFFF4BFB3).withValues(alpha: 0.11);
 
   final List<Map<String, dynamic>> _myReviews = [
     {
@@ -88,28 +93,27 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const SafeBackAppBar(),
-      body: Column(
-        children: [
-          NoteTabBar(
-            selectedIndex: _selectedTab,
-            onTabSelected: (index) => setState(() => _selectedTab = index),
-            tabs: _tabs,
-          ),
-          const SizedBox(height: 16),
-          Expanded(
+    return Column(
+      children: [
+        NoteTabBar(
+          selectedIndex: _selectedTab,
+          onTabSelected: (index) => setState(() => _selectedTab = index),
+          tabs: _tabs,
+          indicatorWidth: 179,
+        ),
+        Expanded(
+          child: Container(
+            color: _bodyBg,
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               itemCount: _currentList.length,
               itemBuilder: (context, index) {
                 return _buildReviewCard(_currentList[index], index);
               },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -175,7 +179,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.mainColor,
+                      color: AppColors.pointColor,
                     ),
                   ),
                 ),
@@ -212,7 +216,7 @@ class _ReviewPageState extends State<ReviewPage> {
             width: 16,
             height: 16,
             colorFilter: ColorFilter.mode(
-              filled ? AppColors.mainColor : const Color(0xFFBDBDBD),
+              filled ? AppColors.subColor1 : const Color(0xFFBDBDBD),
               BlendMode.srcIn,
             ),
           ),

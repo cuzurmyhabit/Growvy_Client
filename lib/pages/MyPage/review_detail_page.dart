@@ -93,7 +93,6 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final maxTicketWidth = width - 32.0;
-    const maxTicketHeight = 520.0;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFC6340),
@@ -105,17 +104,15 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
             const SizedBox(height: 24),
               Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: maxTicketWidth,
-                    maxHeight: maxTicketHeight,
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/image/review_background.png',
-                        fit: BoxFit.contain,
-                      ),
+                  constraints: BoxConstraints(maxWidth: maxTicketWidth),
+                  child: ClipRect(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/image/review_background.png',
+                          fit: BoxFit.contain,
+                        ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
@@ -208,7 +205,8 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
                           ],
                         ),
                       ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

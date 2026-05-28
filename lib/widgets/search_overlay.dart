@@ -522,7 +522,7 @@ class SearchOverlayState extends State<SearchOverlay>
                     child: Icon(
                       Icons.arrow_upward,
                       size: 16,
-                      color: AppColors.pointColor,
+                      color: AppColors.subColor1,
                     ),
                   ),
               ],
