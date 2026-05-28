@@ -16,7 +16,8 @@ class SafeBackAppBar extends StatelessWidget implements PreferredSizeWidget {
   static const double toolbarHeight = 48;
 
   @override
-  Size get preferredSize => const Size.fromHeight(toolbarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(toolbarHeight + (showDivider ? 1 : 0));
 
   @override
   Widget build(BuildContext context) {

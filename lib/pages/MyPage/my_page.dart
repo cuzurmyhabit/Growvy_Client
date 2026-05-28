@@ -11,10 +11,19 @@ class MyPage extends StatefulWidget {
   const MyPage({super.key});
 
   @override
-  State<MyPage> createState() => _MyPageState();
+  State<MyPage> createState() => MyPageState();
 }
 
-class _MyPageState extends State<MyPage> {
+class MyPageState extends State<MyPage> {
+  /// 외부(예: 하단 nav바의 Profile 재선택)에서 리뷰 화면을 닫고
+  /// 기본 프로필 화면으로 되돌아갈 때 호출한다.
+  void closeReviews() {
+    if (!mounted) return;
+    if (_isViewingReviews) {
+      setState(() => _isViewingReviews = false);
+    }
+  }
+
   int _currentProfileIndex = 0;
   ImageProvider get _currentProfileImage =>
       _profileImages[_currentProfileIndex];
@@ -22,6 +31,7 @@ class _MyPageState extends State<MyPage> {
   String _userName = 'My Name';
   String _editPronouns = 'She/Her';
   bool _isEditingProfile = false;
+  bool _isViewingReviews = false;
   late final TextEditingController _nameController;
 
   final List<ImageProvider> _profileImages = [
@@ -69,9 +79,30 @@ class _MyPageState extends State<MyPage> {
     return SafeArea(
       top: true,
       bottom: false,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 280),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          final offset = Tween<Offset>(
+            begin: const Offset(0, 0.04),
+            end: Offset.zero,
+          ).animate(animation);
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(position: offset, child: child),
+          );
+        },
+        child: _isViewingReviews
+            ? const KeyedSubtree(
+                key: ValueKey('reviews'),
+                child: ReviewPage(),
+              )
+            : KeyedSubtree(
+                key: const ValueKey('profile'),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
           if (_isEditingProfile)
             ProfileEditContent(
               profileImages: _profileImages,
@@ -131,6 +162,8 @@ class _MyPageState extends State<MyPage> {
           ],
         ],
       ),
+                ),
+              ),
       ),
     );
   }
@@ -240,11 +273,7 @@ class _MyPageState extends State<MyPage> {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ReviewPage()),
-                );
-              },
+              onTap: () => setState(() => _isViewingReviews = true),
               borderRadius: BorderRadius.circular(8),
               child: Padding(
                 padding: const EdgeInsets.symmetric(

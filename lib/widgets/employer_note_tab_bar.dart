@@ -8,11 +8,15 @@ class NoteTabBar extends StatelessWidget {
     required this.selectedIndex,
     required this.onTabSelected,
     required this.tabs,
+    this.indicatorWidth = 48,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
   final List<String> tabs;
+
+  /// 활성 탭 아래 슬라이딩 인디케이터의 가로 길이.
+  final double indicatorWidth;
 
   static const Duration _animationDuration = Duration(milliseconds: 280);
 
@@ -64,7 +68,7 @@ class NoteTabBar extends StatelessWidget {
                       child: AnimatedContainer(
                         duration: _animationDuration,
                         curve: Curves.easeInOutCubic,
-                        width: 48,
+                        width: indicatorWidth,
                         height: 3,
                         decoration: BoxDecoration(
                           color: AppColors.mainColor,

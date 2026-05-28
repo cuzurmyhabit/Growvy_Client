@@ -56,6 +56,7 @@ class _MainPageState extends State<MainPage> {
   bool _isSearchActive = false;
   final GlobalKey<SearchOverlayState> _searchOverlayKey =
       GlobalKey<SearchOverlayState>();
+  final GlobalKey<MyPageState> _myPageKey = GlobalKey<MyPageState>();
   late final List<Widget> _pages;
 
   @override
@@ -70,7 +71,7 @@ class _MainPageState extends State<MainPage> {
       ),
       const ChatListPage(),
       const NoteTabPage(),
-      MyPage(),
+      MyPage(key: _myPageKey),
     ];
   }
 
@@ -96,6 +97,10 @@ class _MainPageState extends State<MainPage> {
     if (_isSearchActive) {
       // 오버레이의 reverse 애니메이션이 끝나면 onClose가 _isSearchActive를 풀어준다.
       _searchOverlayKey.currentState?.close();
+    }
+    // Profile 탭을 다시 누르면 리뷰 화면을 닫고 기본 프로필로 되돌아간다.
+    if (index == 4 && _selectedIndex == 4) {
+      _myPageKey.currentState?.closeReviews();
     }
     if (_selectedIndex != index) {
       setState(() => _selectedIndex = index);
