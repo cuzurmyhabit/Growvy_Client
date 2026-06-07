@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/signin_app_bar.dart';
 import '../../widgets/next_button.dart';
@@ -122,6 +123,10 @@ class _ProfilePickerPageState extends State<ProfilePickerPage> {
               child: NextButton(
                 text: 'Next',
                 onPressed: () {
+                  // 현재 가운데에 보이는 프로필을 선택한 것으로 저장.
+                  Get.find<SignupDataController>().setProfileImage(
+                    _profileImages[_currentIndex],
+                  );
                   // GetX 라우터로 통일 — 이후 SignupCompletePage 에서
                   // Get.offAll 로 stack 을 비울 때 navigator 간 어긋남이 없도록 한다.
                   Get.to(() => const SignupCompletePage());

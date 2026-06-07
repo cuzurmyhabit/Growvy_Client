@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/next_button.dart';
@@ -13,7 +15,29 @@ class EmployerSignupPage extends StatefulWidget {
 }
 
 class _EmployerSignupPageState extends State<EmployerSignupPage> {
+  late final TextEditingController _companyNameController;
+  late final TextEditingController _businessAddressController;
   bool isSoleProprietorship = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final data = Get.find<SignupDataController>();
+    _companyNameController = TextEditingController(
+      text: data.companyName ?? '',
+    );
+    _businessAddressController = TextEditingController(
+      text: data.businessAddress ?? '',
+    );
+    isSoleProprietorship = data.isSoleProprietorship ?? false;
+  }
+
+  @override
+  void dispose() {
+    _companyNameController.dispose();
+    _businessAddressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +60,8 @@ class _EmployerSignupPageState extends State<EmployerSignupPage> {
               ),
               const SizedBox(height: 40),
 
-              const CustomTextField(
+              CustomTextField(
+                controller: _companyNameController,
                 label: 'Company Name',
                 hintText: 'Enter Company Name',
               ),
@@ -64,7 +89,8 @@ class _EmployerSignupPageState extends State<EmployerSignupPage> {
               ),
               const SizedBox(height: 7),
 
-              const CustomTextField(
+              CustomTextField(
+                controller: _businessAddressController,
                 label: '*Business Address',
                 hintText: 'Enter Business Address',
               ),
@@ -74,6 +100,11 @@ class _EmployerSignupPageState extends State<EmployerSignupPage> {
               NextButton(
                 text: 'Next',
                 onPressed: () {
+                  Get.find<SignupDataController>().setEmployerInfo(
+                    companyName: _companyNameController.text.trim(),
+                    isSoleProprietorship: isSoleProprietorship,
+                    businessAddress: _businessAddressController.text.trim(),
+                  );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
