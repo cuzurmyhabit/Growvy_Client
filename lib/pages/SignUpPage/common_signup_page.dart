@@ -6,6 +6,7 @@ import '../../widgets/next_button.dart';
 import '../../widgets/signin_app_bar.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
+import '../../controllers/signup_data_controller.dart';
 import 'employer_signup_page.dart';
 import 'seeker_address_page.dart';
 
@@ -20,6 +21,30 @@ class CommonSignUpPage extends StatefulWidget {
 
 class _CommonSignUpPageState extends State<CommonSignUpPage> {
   String selectedGender = '';
+
+  // 이전 단계로 돌아갔다 다시 들어왔을 때 입력값이 유지되도록 초기값은
+  // SignupDataController 에 누적된 값을 사용한다.
+  late final TextEditingController _nameController;
+  late final TextEditingController _dobController;
+  late final TextEditingController _phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    final data = Get.find<SignupDataController>();
+    _nameController = TextEditingController(text: data.name ?? '');
+    _dobController = TextEditingController(text: data.dateOfBirth ?? '');
+    _phoneController = TextEditingController(text: data.phoneNumber ?? '');
+    selectedGender = data.gender ?? '';
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _dobController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +68,7 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
               const SizedBox(height: 34),
 
               CustomTextField(
+                controller: _nameController,
                 label: '*Name',
                 hintText: 'Full Name',
                 keyboardType: TextInputType.name,
@@ -54,6 +80,7 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
               ),
 
               CustomTextField(
+                controller: _dobController,
                 label: '*Date of Birth',
                 hintText: 'YYYY/MM/DD',
                 keyboardType: TextInputType.number,
@@ -65,6 +92,7 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
               ),
 
               CustomTextField(
+                controller: _phoneController,
                 label: '*Phone Number',
                 hintText: '+61 0000 0000',
                 keyboardType: TextInputType.phone,
@@ -102,7 +130,20 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
               NextButton(
                 text: 'Next',
                 onPressed: () async {
-                  await Get.find<AuthController>().saveUserType(widget.isEmployer);
+                  // 1) 현재 단계 입력값을 컨트롤러에 누적
+                  final signupData = Get.find<SignupDataController>();
+                  signupData.setUserType(widget.isEmployer);
+                  signupData.setBasicInfo(
+                    name: _nameController.text.trim(),
+                    dateOfBirth: _dobController.text.trim(),
+                    phoneNumber: _phoneController.text.trim(),
+                    gender: selectedGender.isEmpty ? null : selectedGender,
+                  );
+
+                  // 2) 기존대로 사용자 타입 저장 후 다음 화면으로 이동
+                  await Get.find<AuthController>()
+                      .saveUserType(widget.isEmployer);
+                  if (!context.mounted) return;
                   if (widget.isEmployer) {
                     Navigator.push(
                       context,

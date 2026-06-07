@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/signup_button.dart';
 import '../../widgets/signin_app_bar.dart';
-// import 'signup_page.dart';
-import 'common_signup_page.dart'; 
+import 'common_signup_page.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -29,6 +30,7 @@ class SignInPage extends StatelessWidget {
             SignUpButton(
               text: 'Employer',
               onPressed: () {
+                Get.find<SignupDataController>().setUserType(true);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -42,6 +44,7 @@ class SignInPage extends StatelessWidget {
             SignUpButton(
               text: 'Job seeker',
               onPressed: () {
+                Get.find<SignupDataController>().setUserType(false);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

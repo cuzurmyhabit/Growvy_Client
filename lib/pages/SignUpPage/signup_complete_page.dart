@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../bindings/main_binding.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/signin_app_bar.dart';
 import '../../widgets/next_button.dart';
@@ -17,9 +18,16 @@ class _SignupCompletePageState extends State<SignupCompletePage> {
   /// 중복 탭으로 인한 라우트 전환 충돌 방지용 가드.
   bool _isNavigating = false;
 
-  void _goToMain() {
+  Future<void> _goToMain() async {
     if (_isNavigating) return;
     _isNavigating = true;
+
+    // 회원가입 단계마다 누적해 둔 입력값을 한 번에 서버로 보낸다.
+    // (DB 연동 전이라 SignupDataController.submitToBackend 가 debugPrint 만 한다.)
+    final signupData = Get.find<SignupDataController>();
+    await signupData.submitToBackend();
+    // 다음 회원가입 흐름을 위해 누적값 초기화.
+    signupData.reset();
 
     // 현재 빌드 사이클이 끝난 뒤 라우트를 교체한다.
     // GetX 의 offAll 에 binding 파라미터를 직접 넘기면 의존성 등록 → 라우트 push 가

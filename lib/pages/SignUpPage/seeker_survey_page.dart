@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/next_button.dart';
 import 'profile_picker_page.dart';
@@ -116,6 +118,8 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
   }
 
   void _finish() {
+    // 설문 답변을 한 번에 컨트롤러에 저장한다.
+    Get.find<SignupDataController>().setSurveyAnswers(_answers);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const ProfilePickerPage()),

@@ -5,8 +5,14 @@ import '../styles/colors.dart';
 class CustomTextField extends StatelessWidget {
   final String label;
   final String hintText;
-  final TextInputType? keyboardType;           // 키보드 타입 추가
-  final List<TextInputFormatter>? inputFormatters; // 입력 제한 포맷터 추가
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+
+  /// 외부에서 값을 읽거나 미리 채워두기 위한 controller.
+  final TextEditingController? controller;
+
+  /// 입력값이 바뀔 때마다 호출되는 콜백.
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     super.key,
@@ -14,6 +20,8 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     this.keyboardType,
     this.inputFormatters,
+    this.controller,
+    this.onChanged,
   });
 
   @override
@@ -47,8 +55,10 @@ class CustomTextField extends StatelessWidget {
           width: 318,
           height: 48,
           child: TextField(
-            keyboardType: keyboardType,      // 키보드 타입 적용
-            inputFormatters: inputFormatters,// 포맷터 적용
+            controller: controller,
+            onChanged: onChanged,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
             textAlignVertical: TextAlignVertical.center,
             style: const TextStyle(fontSize: 14, color: Colors.black),
             decoration: InputDecoration(

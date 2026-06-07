@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:get/get.dart';
+import '../../controllers/signup_data_controller.dart';
 import 'welcome_page.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -34,6 +36,17 @@ class SignUpPage extends StatelessWidget {
       final firebaseIdToken = await userCredential.user!.getIdToken();
       print('Firebase UID: ${userCredential.user?.uid}');
       print('Firebase Token: $firebaseIdToken');
+
+      // 새 회원가입 흐름을 시작하므로 이전 누적 데이터를 비우고,
+      // Google 계정 정보를 한 곳(SignupDataController)에 저장한다.
+      final signupData = Get.find<SignupDataController>();
+      signupData.reset();
+      signupData.setGoogleAuth(
+        email: userCredential.user?.email,
+        displayName: userCredential.user?.displayName,
+        uid: userCredential.user?.uid,
+        idToken: firebaseIdToken,
+      );
 
       // 백엔드 로그인 요청 (호스트는 .env 의 API_BASE_URL 사용 예정)
       // final response = await http.post(

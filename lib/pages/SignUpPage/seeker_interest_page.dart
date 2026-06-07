@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/next_button.dart';
 import '../../widgets/signin_app_bar.dart';
@@ -37,17 +39,30 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
     'Customer Service',
   ];
 
-  final Set<String> _selected = <String>{};
+  late final Set<String> _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    // 이전 단계에서 이미 선택했던 관심사가 있다면 그대로 prefill.
+    _selected = <String>{...Get.find<SignupDataController>().interests};
+  }
+
+  void _persist() {
+    Get.find<SignupDataController>().setInterests(_selected);
+  }
 
   void _goNext() {
+    _persist();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SeekerCareerPage()),
     );
   }
 
-  /// "I don't know what I want to do.." 링크 → 8단계 설문 페이지로 이동.
+  /// "I don't know what I want to do..." 링크 → 8단계 설문 페이지로 이동.
   void _openSurvey() {
+    _persist();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SeekerSurveyPage()),
