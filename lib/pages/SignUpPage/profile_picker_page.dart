@@ -123,9 +123,12 @@ class _ProfilePickerPageState extends State<ProfilePickerPage> {
               child: NextButton(
                 text: 'Next',
                 onPressed: () {
-                  // 현재 가운데에 보이는 프로필을 선택한 것으로 저장.
+                  // 현재 가운데에 보이는 프로필을 저장.
+                  // 백엔드의 profileImageId 는 1-based 정수라서 index+1 로 보낸다.
+                  // (정식 이미지 업로드 API 가 붙으면 그 응답으로 받은 id 로 교체.)
                   Get.find<SignupDataController>().setProfileImage(
                     _profileImages[_currentIndex],
+                    id: _currentIndex + 1,
                   );
                   // GetX 라우터로 통일 — 이후 SignupCompletePage 에서
                   // Get.offAll 로 stack 을 비울 때 navigator 간 어긋남이 없도록 한다.

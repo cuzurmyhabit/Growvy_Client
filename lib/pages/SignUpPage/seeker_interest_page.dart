@@ -48,12 +48,9 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
     _selected = <String>{...Get.find<SignupDataController>().interests};
   }
 
-  void _persist() {
-    Get.find<SignupDataController>().setInterests(_selected);
-  }
-
   void _goNext() {
-    _persist();
+    // industry 분기로 확정. (setInterests 내부에서 설문 답변은 비워진다.)
+    Get.find<SignupDataController>().setInterests(_selected);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SeekerCareerPage()),
@@ -61,8 +58,9 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
   }
 
   /// "I don't know what I want to do..." 링크 → 8단계 설문 페이지로 이동.
+  /// 설문 분기로 빠지므로 그동안 골라 둔 industry 선택은 폐기한다.
   void _openSurvey() {
-    _persist();
+    Get.find<SignupDataController>().clearInterests();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SeekerSurveyPage()),

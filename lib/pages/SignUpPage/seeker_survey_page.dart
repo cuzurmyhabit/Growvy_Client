@@ -118,8 +118,17 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
   }
 
   void _finish() {
-    // 설문 답변을 한 번에 컨트롤러에 저장한다.
-    Get.find<SignupDataController>().setSurveyAnswers(_answers);
+    // 설문 답변(qIndex → optIndex) 과 답변 라벨을 함께 컨트롤러에 저장한다.
+    // 라벨은 SignupDataController 의 id 매핑 테이블을 거쳐
+    // 최종 payload 의 interestIds 배열로 변환된다.
+    final labels = <String>[
+      for (final entry in _answers.entries)
+        _questions[entry.key].options[entry.value],
+    ];
+    Get.find<SignupDataController>().setSurveyAnswers(
+      _answers,
+      answerLabels: labels,
+    );
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const ProfilePickerPage()),
