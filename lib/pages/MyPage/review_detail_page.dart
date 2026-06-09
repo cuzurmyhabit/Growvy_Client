@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../styles/colors.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/confirm_modal.dart';
 import '../../widgets/completion_modal.dart';
 import '../../widgets/safe_back_app_bar.dart';
@@ -76,8 +78,7 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
       ConfirmModal.show(
         context: context,
         message: 'Changes you made may not be saved',
-        cancelLabel: 'Cancel',
-        acceptLabel: 'Discard',
+        acceptLabel: 'common.discard'.tr(),
         onCancel: () => Navigator.of(context).pop(),
         onAccept: () {
           Navigator.of(context).pop();
@@ -119,7 +120,7 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Center(
-                              child: Text(
+                              child: AutoTranslateText(
                                 widget.title,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
@@ -170,7 +171,7 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
                                       ),
                                     )
                                   : SingleChildScrollView(
-                                      child: Text(
+                                      child: AutoTranslateText(
                                         widget.body,
                                         style: const TextStyle(
                                           fontSize: 14,
@@ -197,7 +198,7 @@ class _ReviewDetailPageState extends State<ReviewDetailPage> {
                                         borderRadius: BorderRadius.circular(26),
                                       ),
                                     ),
-                                    child: const Text('Save Changes'),
+                                    child: const AutoTranslateText('Save Changes'),
                                   ),
                                 ),
                               ),

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/MainPage/job_detail_page.dart';
 import '../styles/colors.dart';
+import 'auto_translate_text.dart';
 import 'job_search_bar.dart';
 import 'region_modal.dart';
 import 'search_result_card.dart';
@@ -260,7 +262,7 @@ class SearchOverlayState extends State<SearchOverlay>
           Center(
             child: GestureDetector(
               onTap: () => setState(() => _recentSearches.clear()),
-              child: const Text(
+              child: const AutoTranslateText(
                 'delete all',
                 style: TextStyle(
                   fontSize: 14,
@@ -275,7 +277,7 @@ class SearchOverlayState extends State<SearchOverlay>
           const SizedBox(height: 28),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
+            child: AutoTranslateText(
               'Popular searches',
               style: TextStyle(
                 fontSize: 16,
@@ -299,7 +301,7 @@ class SearchOverlayState extends State<SearchOverlay>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        const AutoTranslateText(
           'Recent searches',
           style: TextStyle(
             fontSize: 16,
@@ -310,7 +312,7 @@ class SearchOverlayState extends State<SearchOverlay>
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            const AutoTranslateText(
               'auto save',
               style: TextStyle(
                 fontSize: 14,
@@ -372,7 +374,7 @@ class SearchOverlayState extends State<SearchOverlay>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Result of ${_results.length}',
+                '${'search.result_of'.tr()} ${_results.length}',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFFBDBDBD),
@@ -415,9 +417,9 @@ class SearchOverlayState extends State<SearchOverlay>
           color: const Color(0xFFBDBDBD),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Text(
-          'Location',
-          style: TextStyle(
+        child: Text(
+          'search.location'.tr(),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
             fontWeight: FontWeight.w600,
@@ -441,7 +443,7 @@ class SearchOverlayState extends State<SearchOverlay>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          AutoTranslateText(
             term,
             style: const TextStyle(
               fontSize: 14,
@@ -505,7 +507,7 @@ class SearchOverlayState extends State<SearchOverlay>
                 ),
                 const SizedBox(width: 8),
                 Flexible(
-                  child: Text(
+                  child: AutoTranslateText(
                     title,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

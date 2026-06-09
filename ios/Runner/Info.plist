@@ -56,6 +56,10 @@
 				</array>
 			</dict>
 		</array>
+		<!-- google_sign_in_ios 5.9.0+ 가 OAuth 페이지를 로드하기 위해 필수. -->
+		<!-- 값은 GoogleService-Info.plist 의 CLIENT_ID 와 동일해야 한다. -->
+		<key>GIDClientID</key>
+		<string>1025066787133-g7itk3mncretf8tdk82bstt7mqtio1lb.apps.googleusercontent.com</string>
 		<!-- Photo and camera usage descriptions required by iOS for image_picker -->
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>앱에서 사진 라이브러리의 사진을 선택하여 업로드하기 위해 접근합니다.</string>

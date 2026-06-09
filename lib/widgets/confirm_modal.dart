@@ -1,18 +1,20 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 class ConfirmModal extends StatelessWidget {
   final String message;
-  final String cancelLabel;
-  final String acceptLabel;
+  final String? cancelLabel;
+  final String? acceptLabel;
   final VoidCallback? onCancel;
   final VoidCallback? onAccept;
 
   const ConfirmModal({
     super.key,
     required this.message,
-    this.cancelLabel = 'Cancel',
-    this.acceptLabel = 'Accept',
+    this.cancelLabel,
+    this.acceptLabel,
     this.onCancel,
     this.onAccept,
   });
@@ -20,8 +22,8 @@ class ConfirmModal extends StatelessWidget {
   static Future<T?> show<T>({
     required BuildContext context,
     required String message,
-    String cancelLabel = 'Cancel',
-    String acceptLabel = 'Accept',
+    String? cancelLabel,
+    String? acceptLabel,
     bool barrierDismissible = false,
     VoidCallback? onCancel,
     VoidCallback? onAccept,
@@ -48,6 +50,8 @@ class ConfirmModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedCancel = cancelLabel ?? 'common.cancel'.tr();
+    final resolvedAccept = acceptLabel ?? 'common.accept'.tr();
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -72,7 +76,7 @@ class ConfirmModal extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
+                    child: AutoTranslateText(
                       message,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
@@ -114,7 +118,7 @@ class ConfirmModal extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                cancelLabel,
+                                resolvedCancel,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -151,7 +155,7 @@ class ConfirmModal extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                acceptLabel,
+                                resolvedAccept,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,

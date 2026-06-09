@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../styles/colors.dart';
+import 'auto_translate_text.dart';
 
 /// 검색 결과 리스트에서 사용하는 카드.
 /// 디자인: 흰 배경 r=8, 라이트 보더, 우상단 북마크, 좌하단 태그 칩, 우하단 apply 버튼.
@@ -55,7 +57,7 @@ class SearchResultCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      AutoTranslateText(
                         title,
                         style: const TextStyle(
                           fontSize: 16,
@@ -66,7 +68,7 @@ class SearchResultCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      Text(
+                      AutoTranslateText(
                         company,
                         style: const TextStyle(
                           fontSize: 12,
@@ -132,7 +134,7 @@ class SearchResultCard extends StatelessWidget {
         color: const Color(0xFFFFEAEA),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text(
+      child: AutoTranslateText(
         text,
         style: const TextStyle(
           fontSize: 12,
@@ -156,9 +158,9 @@ class SearchResultCard extends StatelessWidget {
           color: AppColors.mainColor,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Text(
-          'apply',
-          style: TextStyle(
+        child: Text(
+          'common.apply'.tr(),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
             fontWeight: FontWeight.w600,

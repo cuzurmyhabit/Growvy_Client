@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../styles/colors.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../SignUpPage/signup_page.dart';
 import 'review_page.dart';
 import 'profile_edit_page.dart';
@@ -116,7 +117,7 @@ class MyPageState extends State<MyPage> {
           else ...[
             _buildHeader(),
             const SizedBox(height: 12),
-            Text(
+            AutoTranslateText(
               _userName,
               style: TextStyle(
                 fontSize: 20,
@@ -125,7 +126,7 @@ class MyPageState extends State<MyPage> {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
+            AutoTranslateText(
               _editPronouns,
               style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
@@ -149,7 +150,7 @@ class MyPageState extends State<MyPage> {
                 (route) => false,
               );
             },
-            child: Text(
+            child: AutoTranslateText(
               'Log Out',
               style: TextStyle(
                 decoration: TextDecoration.underline,
@@ -281,7 +282,7 @@ class MyPageState extends State<MyPage> {
                   vertical: 12,
                 ),
                 child: Center(
-                  child: Text(
+                  child: AutoTranslateText(
                     'Check reviews',
                     style: TextStyle(
                       color: const Color(0xFF931515),
@@ -302,7 +303,7 @@ class MyPageState extends State<MyPage> {
   Widget _buildMenuOption(String title) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-      title: Text(
+      title: AutoTranslateText(
         title,
         style: TextStyle(
           fontSize: 16,

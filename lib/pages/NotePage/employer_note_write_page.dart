@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../styles/colors.dart';
 import '../../services/user_service.dart';
+import '../../utils/auto_localize.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/confirm_modal.dart';
 
 class DashedBorderPainter extends CustomPainter {
@@ -160,7 +162,7 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
               }
             },
           ),
-          title: const Text(
+          title: const AutoTranslateText(
             'Post a Job',
             style: TextStyle(
               color: Colors.black,
@@ -192,10 +194,10 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
                     child: TextField(
                       controller: _titleController,
                       textAlignVertical: TextAlignVertical.center,
-                      decoration: const InputDecoration(
-                        hintText: 'title',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: InputDecoration(
+                        hintText: autoLocalize(context, 'title'),
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
@@ -219,7 +221,7 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
                       borderRadius: BorderRadius.circular(52),
                     ),
                     child: const Center(
-                      child: Text(
+                      child: AutoTranslateText(
                         'Save Draft',
                         style: TextStyle(
                           color: Colors.white,
@@ -246,10 +248,10 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  hintText: 'Write about your experience',
-                  hintStyle: TextStyle(color: Color(0xFFBDBDBD)),
-                  contentPadding: EdgeInsets.all(16),
+                decoration: InputDecoration(
+                  hintText: autoLocalize(context, 'Write about your experience'),
+                  hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+                  contentPadding: const EdgeInsets.all(16),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -368,7 +370,7 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: Text(
+                        child: AutoTranslateText(
                           tag,
                           style: TextStyle(
                             color: isSelected
@@ -429,7 +431,7 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: const Text(
+              child: const AutoTranslateText(
                 'Save',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
@@ -445,8 +447,6 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
     ConfirmModal.show(
       context: context,
       message: 'Do you really want to stop recruiting?',
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Accept',
       onAccept: () {
         Navigator.pop(context);
         Navigator.pop(context);
@@ -458,8 +458,6 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
     ConfirmModal.show(
       context: context,
       message: 'Do you want to save draft it?',
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Accept',
       onAccept: () {
         Navigator.pop(context);
         Navigator.pop(context);
@@ -468,7 +466,7 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
   }
 
   Widget _buildSectionLabel(String label) {
-    return Text(
+    return AutoTranslateText(
       label,
       style: const TextStyle(
         fontSize: 16,
@@ -492,7 +490,7 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
         controller: controller,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          hintText: hintText,
+          hintText: autoLocalize(context, hintText),
           hintStyle: const TextStyle(color: Colors.grey),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           border: InputBorder.none,

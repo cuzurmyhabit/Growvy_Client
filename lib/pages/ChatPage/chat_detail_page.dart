@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../utils/auto_localize.dart';
+import '../../widgets/auto_translate_text.dart';
 
 /// 채팅 메시지 데이터
 class ChatMessage {
@@ -123,7 +125,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  Text(
+                  AutoTranslateText(
                     widget.peerName ?? 'Name',
                     style: const TextStyle(
                       color: Colors.black,
@@ -273,7 +275,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                           ),
                   ),
                   alignment: Alignment.center,
-                  child: Text(
+                  child: AutoTranslateText(
                     msg.text,
                     style: TextStyle(
                       color: msg.isMe ? Colors.white : Colors.black,
@@ -324,15 +326,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       child: TextField(
                         controller: _textController,
                         textAlignVertical: TextAlignVertical.center,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a Message',
-                          hintStyle: TextStyle(
+                        decoration: InputDecoration(
+                          hintText: autoLocalize(context, 'Type a Message'),
+                          hintStyle: const TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         onSubmitted: (_) => _sendMessage(),
                       ),

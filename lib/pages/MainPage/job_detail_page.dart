@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../controllers/auth_controller.dart';
 import '../../styles/colors.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/confirm_modal.dart';
 import '../../widgets/completion_modal.dart';
 
@@ -135,7 +137,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        AutoTranslateText(
                           widget.title ?? "Sadie's HotPot",
                           style: const TextStyle(
                             fontSize: 24,
@@ -148,7 +150,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            AutoTranslateText(
                               widget.companyName ?? 'My Awesome Company',
                               style: TextStyle(
                                 fontSize: 16,
@@ -188,7 +190,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                         ),
                         const SizedBox(height: 24),
 
-                        Text(
+                        AutoTranslateText(
                           widget.description ??
                               "Looking for someone to try my Malatang.",
                           style: const TextStyle(
@@ -318,7 +320,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
         borderRadius: BorderRadius.circular(4),
       ),
       alignment: Alignment.center,
-      child: Text(
+      child: AutoTranslateText(
         text,
         style: const TextStyle(
           color: Colors.white,
@@ -347,7 +349,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
+            child: AutoTranslateText(
               text,
               style: const TextStyle(
                 fontSize: 15,
@@ -386,15 +388,15 @@ class _JobDetailPageState extends State<JobDetailPage> {
                 : () {
                     ConfirmModal.show(
                       context: context,
-                      message: 'Submit Application?',
-                      cancelLabel: 'Cancel',
-                      acceptLabel: 'Apply',
+                      message: 'job_detail.submit_application'.tr(),
+                      cancelLabel: 'common.cancel'.tr(),
+                      acceptLabel: 'common.apply'.tr(),
                       onAccept: () {
                         Navigator.pop(context);
                         if (!context.mounted) return;
                         CompletionModal.show(
                           context,
-                          message: 'Application submitted successfully!',
+                          message: 'job_detail.application_submitted'.tr(),
                           onDismiss: () {
                             if (context.mounted) {
                               Navigator.pop(context, widget.postId);
@@ -414,9 +416,12 @@ class _JobDetailPageState extends State<JobDetailPage> {
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
-            child: const Text(
-              'apply',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            child: Text(
+              'job_detail.apply'.tr(),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),

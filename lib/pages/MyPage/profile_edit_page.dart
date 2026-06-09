@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../styles/colors.dart';
+import '../../utils/auto_localize.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/profile_picker_modal.dart';
 import '../../widgets/banner_color_picker_modal.dart';
 
@@ -106,7 +108,7 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
                     const Spacer(),
                     TextButton(
                       onPressed: _onProfileTap,
-                      child: const Text(
+                      child: const AutoTranslateText(
                         'Profile',
                         style: TextStyle(
                           fontSize: 12,
@@ -118,7 +120,7 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
                     Container(width: 1, height: 18, color: Colors.white),
                     TextButton(
                       onPressed: _onBannerTap,
-                      child: const Text(
+                      child: const AutoTranslateText(
                         'Banner',
                         style: TextStyle(
                           fontSize: 12,
@@ -173,7 +175,7 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
                         child: TextField(
                           controller: _nameController,
                           decoration: InputDecoration(
-                            hintText: 'Enter My Name',
+                            hintText: autoLocalize(context, 'Enter My Name'),
                             hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
                             filled: true,
                             fillColor: const Color(0xFFFAFAFA),
@@ -214,7 +216,7 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
                             dropdownColor: Colors.white,
                             icon: Icon(Icons.arrow_drop_down, color: Colors.grey[600], size: 24),
                             decoration: InputDecoration(
-                              labelText: 'Gender Pronouns',
+                              labelText: autoLocalize(context, 'Gender Pronouns'),
                               labelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
                               filled: true,
                               fillColor: const Color(0xFFFAFAFA),
@@ -233,10 +235,13 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
                               ),
                             ),
                             selectedItemBuilder: (context) => ['She/Her', 'He/Him', 'They/Them']
-                                .map((s) => Text(s, overflow: TextOverflow.ellipsis))
+                                .map((s) => Text(autoLocalize(context, s), overflow: TextOverflow.ellipsis))
                                 .toList(),
                             items: ['She/Her', 'He/Him', 'They/Them']
-                                .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                                .map((s) => DropdownMenuItem(
+                                      value: s,
+                                      child: Text(autoLocalize(context, s)),
+                                    ))
                                 .toList(),
                             onChanged: (v) {
                               if (v != null) setState(() => _pronouns = v);
@@ -248,7 +253,7 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
                   ],
                 ),
                 const SizedBox(height: 32),
-                const Text(
+                const AutoTranslateText(
                   'Account',
                   style: TextStyle(
                     fontSize: 16,
@@ -283,7 +288,7 @@ class _ProfileEditContentState extends State<ProfileEditContent> {
         child: Row(
           children: [
             Expanded(
-              child: Text(
+              child: AutoTranslateText(
                 label,
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),

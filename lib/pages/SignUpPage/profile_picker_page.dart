@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/signin_app_bar.dart';
@@ -61,9 +62,9 @@ class _ProfilePickerPageState extends State<ProfilePickerPage> {
         children: [
           const Spacer(flex: 1),
 
-          const Text(
-            'Pick Your Profile',
-            style: TextStyle(
+          Text(
+            'signup.pick_profile'.tr(),
+            style: const TextStyle(
               color: AppColors.mainColor,
               fontSize: 28,
               fontWeight: FontWeight.w600,
@@ -121,7 +122,7 @@ class _ProfilePickerPageState extends State<ProfilePickerPage> {
             child: SizedBox(
               width: 320,
               child: NextButton(
-                text: 'Next',
+                text: 'common.next'.tr(),
                 onPressed: () {
                   // 현재 가운데에 보이는 프로필을 저장.
                   // 백엔드의 profileImageId 는 1-based 정수라서 index+1 로 보낸다.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 class NotificationModal extends StatelessWidget {
   const NotificationModal({super.key});
@@ -36,7 +37,7 @@ class NotificationModal extends StatelessWidget {
               children: [
                 const Padding(
                   padding: EdgeInsets.only(top: 4),
-                  child: Text(
+                  child: AutoTranslateText(
                     'Notifications',
                     style: TextStyle(
                       fontSize: 14,
@@ -65,7 +66,7 @@ class NotificationModal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Today 섹션
-                          const Text(
+                          const AutoTranslateText(
                             'Today',
                             style: TextStyle(
                               fontSize: 14,
@@ -112,7 +113,7 @@ class NotificationModal extends StatelessWidget {
                           const SizedBox(height: 24),
 
                           // This Week 섹션
-                          const Text(
+                          const AutoTranslateText(
                             'This Week',
                             style: TextStyle(
                               fontSize: 14,
@@ -288,7 +289,7 @@ class NotificationModal extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              AutoTranslateText(
                 title,
                 style: const TextStyle(
                   fontSize: 12,
@@ -299,6 +300,7 @@ class NotificationModal extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
+                    // 시간/요일 형식은 숫자 기반이라 번역하지 않는다.
                     Text(
                       time,
                       style: TextStyle(
@@ -321,7 +323,7 @@ class NotificationModal extends StatelessWidget {
               ],
               if (subtitle != null) ...[
                 const SizedBox(height: 4),
-                Text(
+                AutoTranslateText(
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,

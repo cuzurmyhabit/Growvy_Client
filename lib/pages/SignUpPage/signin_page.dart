@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/signup_button.dart';
@@ -18,9 +19,9 @@ class SignInPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Are you',
-              style: TextStyle(
+            Text(
+              'signup.are_you'.tr(),
+              style: const TextStyle(
                 color: AppColors.mainColor,
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -28,7 +29,7 @@ class SignInPage extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             SignUpButton(
-              text: 'Employer',
+              text: 'signup.employer'.tr(),
               onPressed: () {
                 Get.find<SignupDataController>().setUserType(true);
                 Navigator.push(
@@ -42,7 +43,7 @@ class SignInPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             SignUpButton(
-              text: 'Job seeker',
+              text: 'signup.job_seeker'.tr(),
               onPressed: () {
                 Get.find<SignupDataController>().setUserType(false);
                 Navigator.push(
