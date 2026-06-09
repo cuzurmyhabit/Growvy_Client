@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../controllers/note_page_controller.dart';
 import '../../services/user_service.dart';
 import '../../styles/colors.dart';
+import '../../utils/auto_localize.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/completion_modal.dart';
 import '../../widgets/confirm_modal.dart';
 
@@ -187,7 +189,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
             ),
             onPressed: _onBackPressed,
           ),
-          title: const Text(
+          title: const AutoTranslateText(
             'Note',
             style: TextStyle(
               color: Colors.black,
@@ -248,7 +250,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: const Text(
+                child: const AutoTranslateText(
                   'Save',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
@@ -265,7 +267,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        AutoTranslateText(
           text,
           style: const TextStyle(
             fontSize: 16,
@@ -297,7 +299,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
       style: const TextStyle(fontSize: 14, color: Colors.black),
       cursorColor: AppColors.mainColor,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: autoLocalize(context, hintText),
         hintStyle: const TextStyle(color: _labelGray, fontSize: 14),
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 10),
@@ -354,7 +356,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
             color: selected ? AppColors.mainColor : _chipBorderGray,
           ),
         ),
-        child: Text(
+        child: AutoTranslateText(
           label,
           style: TextStyle(
             fontSize: 12,
@@ -395,7 +397,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text(
+          title: const AutoTranslateText(
             'Add Skill',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
@@ -403,12 +405,12 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
             controller: controller,
             autofocus: true,
             cursorColor: AppColors.mainColor,
-            decoration: const InputDecoration(
-              hintText: 'Enter a skill',
-              enabledBorder: UnderlineInputBorder(
+            decoration: InputDecoration(
+              hintText: autoLocalize(context, 'Enter a skill'),
+              enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: _underlineGray),
               ),
-              focusedBorder: UnderlineInputBorder(
+              focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: AppColors.mainColor),
               ),
             ),
@@ -416,14 +418,14 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
+              child: const AutoTranslateText(
                 'Cancel',
                 style: TextStyle(color: Colors.black54),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, controller.text.trim()),
-              child: const Text(
+              child: const AutoTranslateText(
                 'Add',
                 style: TextStyle(color: AppColors.mainColor),
               ),
@@ -512,7 +514,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => setState(() => _experienceIndex = i),
-                    child: Text(
+                    child: AutoTranslateText(
                       _experienceLabels[i],
                       textAlign: i == 0
                           ? TextAlign.left
@@ -561,10 +563,10 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
               color: Colors.black,
               height: 1.45,
             ),
-            decoration: const InputDecoration(
-              hintText: 'How was the job?',
-              hintStyle: TextStyle(color: _labelGray, fontSize: 14),
-              contentPadding: EdgeInsets.all(14),
+            decoration: InputDecoration(
+              hintText: autoLocalize(context, 'How was the job?'),
+              hintStyle: const TextStyle(color: _labelGray, fontSize: 14),
+              contentPadding: const EdgeInsets.all(14),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
@@ -591,7 +593,7 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
                   ),
                 ],
               ),
-              child: const Text(
+              child: const AutoTranslateText(
                 'Limit reached',
                 style: TextStyle(
                   fontSize: 14,
@@ -727,8 +729,6 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
     ConfirmModal.show(
       context: context,
       message: 'Do you really want\nto stop recruiting?',
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Accept',
       onCancel: () => Navigator.pop(context),
       onAccept: () {
         Navigator.pop(context);
@@ -744,8 +744,6 @@ class _SeekerNoteWritePageState extends State<SeekerNoteWritePage> {
     ConfirmModal.show(
       context: context,
       message: 'Do you want\nto save draft it?',
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Accept',
       onCancel: () {
         Navigator.pop(context);
         if (mounted) Navigator.pop(context);

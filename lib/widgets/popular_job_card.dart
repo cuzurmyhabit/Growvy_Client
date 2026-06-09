@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../styles/colors.dart';
+import 'auto_translate_text.dart';
 
 class PopularJobCard extends StatelessWidget {
   final String title;
@@ -34,7 +35,7 @@ class PopularJobCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                AutoTranslateText(
                   title,
                   style: const TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
@@ -45,7 +46,7 @@ class PopularJobCard extends StatelessWidget {
                   maxLines: 1,
                 ),
                 const SizedBox(height: 4),
-                Text(
+                AutoTranslateText(
                   company,
                   style: const TextStyle(
                     color: Color(0xFF931515),

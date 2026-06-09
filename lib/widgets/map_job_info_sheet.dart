@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'auto_translate_text.dart';
 
 /// 지도에서 공고 마커 선택 시 뜨는 공고 정보 카드 (357x168, r24, Payment/Time/Qualifications). (357x168, r24, Payment/Time/Qualifications).
 class MapJobInfoSheet extends StatelessWidget {
@@ -56,7 +57,7 @@ class MapJobInfoSheet extends StatelessWidget {
                     child: Row(
                       children: [
                         Flexible(
-                          child: Text(
+                          child: AutoTranslateText(
                             title,
                             style: const TextStyle(
                               fontSize: 18,
@@ -68,7 +69,7 @@ class MapJobInfoSheet extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Flexible(
-                          child: Text(
+                          child: AutoTranslateText(
                             company,
                             style: const TextStyle(
                               fontSize: 14,
@@ -222,7 +223,7 @@ class MapJobInfoSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
+            AutoTranslateText(
               label,
               style: const TextStyle(
                 fontSize: 8,
@@ -234,7 +235,7 @@ class MapJobInfoSheet extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 2),
-            Text(
+            AutoTranslateText(
               value,
               style: const TextStyle(
                 fontSize: 14,
@@ -247,7 +248,7 @@ class MapJobInfoSheet extends StatelessWidget {
             ),
             if (sub.isNotEmpty) ...[
               const SizedBox(height: 0),
-              Text(
+              AutoTranslateText(
                 sub,
                 style: const TextStyle(
                   fontSize: 10,

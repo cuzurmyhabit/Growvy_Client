@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/next_button.dart';
@@ -31,60 +32,93 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
   static const Color _chipBorder = Color(0xFFE5E5E5);
   static const Color _subtitleGray = Color(0xFF747474);
 
+  // 옵션은 (백엔드 매핑용 영어 라벨, 화면 표시용 i18n 키) 쌍으로 들고 다닌다.
+  // - englishLabel 은 SignupDataController._interestIdByLabel 의 키와 1:1.
+  // - 화면에는 i18n 키를 tr 로 변환해서 표시한다.
   static const List<_SurveyQuestion> _questions = [
     _SurveyQuestion(
-      title: 'Energy Style',
-      subtitle: '"What kind of work feels more comfortable for you?"',
+      titleKey: 'signup.survey.q1_title',
+      subtitleKey: 'signup.survey.q1_subtitle',
       options: [
-        'I prefer thinking and planning',
-        'I prefer hands-on, physical work',
-        'A mix of both sounds good',
+        _SurveyOption(
+          'I prefer thinking and planning',
+          'survey_options.thinking_planning',
+        ),
+        _SurveyOption(
+          'I prefer hands-on, physical work',
+          'survey_options.hands_on',
+        ),
+        _SurveyOption(
+          'A mix of both sounds good',
+          'survey_options.mix_of_both',
+        ),
       ],
     ),
     _SurveyQuestion(
-      title: 'Work Environment',
-      subtitle: '"Where would you rather work?"',
+      titleKey: 'signup.survey.q2_title',
+      subtitleKey: 'signup.survey.q2_subtitle',
       options: [
-        'Indoors (office, cafe, studio)',
-        'Outdoors (nature, farm, field)',
-        "I'm okay with either",
+        _SurveyOption(
+          'Indoors (office, cafe, studio)',
+          'survey_options.indoors',
+        ),
+        _SurveyOption(
+          'Outdoors (nature, farm, field)',
+          'survey_options.outdoors',
+        ),
+        _SurveyOption("I'm okay with either", 'survey_options.either_env'),
       ],
     ),
     _SurveyQuestion(
-      title: 'Social Preference',
-      subtitle: '"How do you feel about interacting with people at work?"',
+      titleKey: 'signup.survey.q3_title',
+      subtitleKey: 'signup.survey.q3_subtitle',
       options: [
-        'I enjoy meeting and talking to people',
-        'I prefer working on my own',
-        'A balance of both',
+        _SurveyOption(
+          'I enjoy meeting and talking to people',
+          'survey_options.people_oriented',
+        ),
+        _SurveyOption('I prefer working on my own', 'survey_options.solo'),
+        _SurveyOption('A balance of both', 'survey_options.balanced_social'),
       ],
     ),
     _SurveyQuestion(
-      title: 'Comfort Zone',
-      subtitle: '"What kind of experience are you looking for?"',
+      titleKey: 'signup.survey.q4_title',
+      subtitleKey: 'signup.survey.q4_subtitle',
       options: [
-        'Something new and exciting',
-        'Something familiar and stable',
-        "I'm open to anything",
+        _SurveyOption(
+          'Something new and exciting',
+          'survey_options.new_exciting',
+        ),
+        _SurveyOption(
+          'Something familiar and stable',
+          'survey_options.familiar_stable',
+        ),
+        _SurveyOption("I'm open to anything", 'survey_options.open_anything'),
       ],
     ),
     _SurveyQuestion(
-      title: 'Main Goal',
-      subtitle: '"What matters most to you right now?"',
+      titleKey: 'signup.survey.q5_title',
+      subtitleKey: 'signup.survey.q5_subtitle',
       options: [
-        'Earning money',
-        'Gaining new experiences',
-        'Building my career',
-        'Taking a break and recharging',
+        _SurveyOption('Earning money', 'survey_options.earn_money'),
+        _SurveyOption(
+          'Gaining new experiences',
+          'survey_options.new_experience',
+        ),
+        _SurveyOption('Building my career', 'survey_options.build_career'),
+        _SurveyOption(
+          'Taking a break and recharging',
+          'survey_options.recharge',
+        ),
       ],
     ),
     _SurveyQuestion(
-      title: 'Work Pace / Lifestyle',
-      subtitle: '"What kind of daily pace do you prefer?"',
+      titleKey: 'signup.survey.q6_title',
+      subtitleKey: 'signup.survey.q6_subtitle',
       options: [
-        'Fast-paced and active',
-        'Relaxed and steady',
-        'Depends on the day',
+        _SurveyOption('Fast-paced and active', 'survey_options.fast_paced'),
+        _SurveyOption('Relaxed and steady', 'survey_options.relaxed_steady'),
+        _SurveyOption('Depends on the day', 'survey_options.depends_day'),
       ],
     ),
   ];
@@ -123,7 +157,7 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
     // 최종 payload 의 interestIds 배열로 변환된다.
     final labels = <String>[
       for (final entry in _answers.entries)
-        _questions[entry.key].options[entry.value],
+        _questions[entry.key].options[entry.value].englishLabel,
     ];
     Get.find<SignupDataController>().setSurveyAnswers(
       _answers,
@@ -188,37 +222,37 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Spacer(flex: 3),
-          const Text(
-            'Not sure what to choose?',
+          Text(
+            'signup.survey.intro_title_1'.tr(),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Colors.black,
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'No worries!',
+          Text(
+            'signup.survey.intro_title_2'.tr(),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Colors.black,
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Answer a few quick questions and\nwe\u2019ll find something that fits you.\u201D',
+          Text(
+            'signup.survey.intro_subtitle'.tr(),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 13,
               color: _subtitleGray,
               height: 1.5,
             ),
           ),
           const Spacer(flex: 2),
-          NextButton(text: 'Next', onPressed: _goNext),
+          NextButton(text: 'common.next'.tr(), onPressed: _goNext),
           const Spacer(flex: 4),
         ],
       ),
@@ -232,27 +266,27 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Spacer(flex: 4),
-          const Text(
-            'All Done!',
+          Text(
+            'signup.survey.done_title'.tr(),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
               color: Colors.black,
             ),
           ),
           const SizedBox(height: 14),
-          const Text(
-            'Now let\u2019s look what kind of experience\nwe found it just for you',
+          Text(
+            'signup.survey.done_subtitle'.tr(),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 13,
               color: _subtitleGray,
               height: 1.5,
             ),
           ),
           const Spacer(flex: 3),
-          NextButton(text: "Let's Go!", onPressed: _finish),
+          NextButton(text: 'signup.survey.lets_go'.tr(), onPressed: _finish),
           const Spacer(flex: 4),
         ],
       ),
@@ -269,7 +303,7 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
           const SizedBox(height: 32),
           Center(
             child: Text(
-              q.title,
+              q.titleKey.tr(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 22,
@@ -281,7 +315,7 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
           const SizedBox(height: 12),
           Center(
             child: Text(
-              q.subtitle,
+              q.subtitleKey.tr(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13,
@@ -293,7 +327,7 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
           const SizedBox(height: 56),
           for (int i = 0; i < q.options.length; i++) ...[
             _buildOption(
-              label: q.options[i],
+              label: q.options[i].i18nKey.tr(),
               selected: selected == i,
               onTap: () => setState(() => _answers[qIndex] = i),
             ),
@@ -301,7 +335,7 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
           ],
           const Spacer(),
           NextButton(
-            text: 'Next',
+            text: 'common.next'.tr(),
             onPressed: selected == null ? null : _goNext,
           ),
           const SizedBox(height: 60),
@@ -349,12 +383,21 @@ class _SeekerSurveyPageState extends State<SeekerSurveyPage> {
 }
 
 class _SurveyQuestion {
-  final String title;
-  final String subtitle;
-  final List<String> options;
+  final String titleKey;
+  final String subtitleKey;
+  final List<_SurveyOption> options;
   const _SurveyQuestion({
-    required this.title,
-    required this.subtitle,
+    required this.titleKey,
+    required this.subtitleKey,
     required this.options,
   });
+}
+
+class _SurveyOption {
+  /// 백엔드 매핑(SignupDataController._interestIdByLabel) 의 키. 절대 번역 X.
+  final String englishLabel;
+
+  /// 화면에 표시될 때 tr 로 변환되는 i18n 키.
+  final String i18nKey;
+  const _SurveyOption(this.englishLabel, this.i18nKey);
 }

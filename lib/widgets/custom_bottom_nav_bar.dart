@@ -23,8 +23,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          const Center(child: Text('Home')),
-          const Center(child: Text('Map')),
+          const Center(child: SizedBox.shrink()),
+          const Center(child: SizedBox.shrink()),
           Navigator(
             key: _chatNavigatorKey,
             onGenerateRoute: (settings) {

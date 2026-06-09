@@ -1,0 +1,186 @@
+{
+  "common": {
+    "next": "다음",
+    "cancel": "취소",
+    "save": "저장",
+    "continue": "계속",
+    "skip": "건너뛰기",
+    "yes": "예",
+    "no": "아니오",
+    "ok": "확인",
+    "done": "완료",
+    "delete": "삭제",
+    "edit": "편집",
+    "share": "공유",
+    "apply": "지원하기",
+    "search": "검색",
+    "back": "뒤로",
+    "more": "더보기",
+    "loading": "불러오는 중...",
+    "accept": "확인",
+    "discard": "버리기",
+    "sure": "네",
+    "select": "선택",
+    "see_more": "더보기",
+    "add": "추가"
+  },
+  "language_picker": {
+    "title": "언어를 선택해주세요",
+    "subtitle": "언제든 설정에서 다시 바꿀 수 있어요.",
+    "korean": "한국어",
+    "english": "English",
+    "continue": "시작하기"
+  },
+  "welcome": {
+    "greeting": "환영합니다!"
+  },
+  "translation_loading": {
+    "title": "한국어로 번역하고 있어요",
+    "subtitle": "앱 곳곳의 문구를 미리 번역하고 있어요.\n잠시만 기다려 주세요..."
+  },
+  "signup": {
+    "continue_with_google": "Google 계정으로 계속하기",
+    "google_login_failed": "Google 로그인에 실패했어요",
+    "are_you": "어떤 사용자인가요?",
+    "employer": "구인자",
+    "job_seeker": "구직자",
+    "about_you": "회원 정보",
+
+    "name": "이름",
+    "name_hint": "이름을 입력해주세요",
+    "date_of_birth": "생년월일",
+    "date_of_birth_hint": "YYYY/MM/DD",
+    "phone_number": "전화번호",
+    "phone_number_hint": "+82 010 0000 0000",
+    "gender": "성별",
+    "male": "남성",
+    "female": "여성",
+
+    "company_name": "회사명",
+    "company_name_hint": "회사명을 입력해주세요",
+    "sole_proprietorship": "개인사업자",
+    "business_address": "사업장 주소",
+    "business_address_hint": "사업장 주소를 입력해주세요",
+
+    "home_address": "거주지 주소",
+    "home_address_hint": "거주지 주소를 입력해주세요",
+    "career": "경력",
+    "career_hint": "경력을 입력해주세요",
+    "introduction": "한 줄 소개",
+    "introduction_hint": "자신을 한 줄로 소개해주세요",
+
+    "interest_title": "회원 정보",
+    "interest_subtitle": "관심 있는 분야를 골라주세요",
+    "interest_not_sure": "뭘 하고 싶은지 잘 모르겠어요...",
+
+    "survey": {
+      "intro_title_1": "고르기 어려우신가요?",
+      "intro_title_2": "괜찮아요!",
+      "intro_subtitle": "간단한 질문 몇 가지에 답해주시면\n잘 맞는 활동을 찾아드릴게요.",
+      "done_title": "다 됐어요!",
+      "done_subtitle": "회원님께 딱 맞는 활동을\n찾아왔어요",
+      "lets_go": "시작하기!",
+
+      "q1_title": "에너지 스타일",
+      "q1_subtitle": "\"어떤 종류의 일이 더 편하게 느껴지나요?\"",
+      "q2_title": "근무 환경",
+      "q2_subtitle": "\"어디서 일하는 게 좋으세요?\"",
+      "q3_title": "사회적 성향",
+      "q3_subtitle": "\"일할 때 사람들과 어울리는 건 어떠세요?\"",
+      "q4_title": "편안한 영역",
+      "q4_subtitle": "\"어떤 경험을 원하세요?\"",
+      "q5_title": "주요 목표",
+      "q5_subtitle": "\"지금 가장 중요한 게 무엇인가요?\"",
+      "q6_title": "근무 페이스 / 라이프스타일",
+      "q6_subtitle": "\"어떤 일상 페이스를 선호하세요?\""
+    },
+
+    "pick_profile": "프로필을 선택해주세요",
+    "all_done": "가입 완료!",
+    "ready_to_start": "시작하기!"
+  },
+  "interests": {
+    "hospitality_fb": "숙박 & 식음료",
+    "retail_sales": "리테일 & 판매",
+    "farm_seasonal": "농장 & 시즌 잡",
+    "manufacturing": "제조",
+    "factory_work": "공장 근무",
+    "cleaning_facilities": "청소 & 시설관리",
+    "construction": "건설",
+    "logistics_moving": "물류 & 이사",
+    "events_festivals": "이벤트 & 페스티벌",
+    "customer_service": "고객 응대",
+    "other_jobs": "기타"
+  },
+  "survey_options": {
+    "thinking_planning": "생각하고 계획하는 일이 좋아요",
+    "hands_on": "몸으로 직접 하는 일이 좋아요",
+    "mix_of_both": "둘 다 적절히 섞이면 좋겠어요",
+    "indoors": "실내 (사무실, 카페, 스튜디오)",
+    "outdoors": "야외 (자연, 농장, 현장)",
+    "either_env": "둘 다 괜찮아요",
+    "people_oriented": "사람들과 만나고 대화하는 게 좋아요",
+    "solo": "혼자 일하는 게 좋아요",
+    "balanced_social": "균형 있게 일하고 싶어요",
+    "new_exciting": "새롭고 신나는 경험",
+    "familiar_stable": "익숙하고 안정적인 환경",
+    "open_anything": "뭐든 열려 있어요",
+    "earn_money": "돈을 벌고 싶어요",
+    "new_experience": "새로운 경험을 쌓고 싶어요",
+    "build_career": "커리어를 만들고 싶어요",
+    "recharge": "쉬면서 재충전하고 싶어요",
+    "fast_paced": "빠르고 활기찬 페이스",
+    "relaxed_steady": "여유롭고 꾸준한 페이스",
+    "depends_day": "그날 그날 달라요"
+  },
+  "main": {
+    "todays_task": "오늘의 일정",
+    "todays_task_dummy": "시드니의 파트타임 카페 일",
+    "calendar": "캘린더",
+    "notification": "알림",
+    "job_postings_nearby": "내 주변 일자리",
+    "popular_jobs": "인기 일자리",
+    "nearest": "가까운 순",
+    "newest": "최신순",
+    "see_more": "더보기"
+  },
+  "job_detail": {
+    "apply": "지원하기",
+    "submit_application": "지원하시겠어요?",
+    "application_submitted": "지원이 완료되었어요!"
+  },
+  "note": {
+    "my_history": "내 기록",
+    "no_postings": "아직 등록된 공고가 없어요",
+    "no_history": "아직 기록이 없어요",
+    "tabs": {
+      "hiring": "모집중",
+      "filled": "마감",
+      "closed": "종료",
+      "draft": "임시저장",
+      "applied": "지원함",
+      "ongoing": "진행중",
+      "done": "완료",
+      "saved": "저장"
+    }
+  },
+  "my_page": {
+    "my_reviews": "내 리뷰",
+    "received": "받은 리뷰",
+    "profile": "프로필",
+    "edit_profile": "프로필 편집"
+  },
+  "search": {
+    "search_hint": "일자리 검색",
+    "result_of": "검색 결과",
+    "location": "지역",
+    "apply": "적용"
+  },
+  "chat": {
+    "chats": "채팅",
+    "no_messages": "아직 메시지가 없어요"
+  },
+  "map": {
+    "region": "지역"
+  }
+}

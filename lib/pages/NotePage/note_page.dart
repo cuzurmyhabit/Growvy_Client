@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/note_page_controller.dart';
 import '../../styles/colors.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/employer_note_tab_bar.dart';
 
 /// Note 목록 View (GetX MVVM). write만 직업별(employer_note_write / seeker_note_write)로 분리.
@@ -10,8 +12,19 @@ import '../../widgets/employer_note_tab_bar.dart';
 class NotePage extends GetView<NotePageController> {
   const NotePage({super.key});
 
-  static const _employerTabs = ['Hiring', 'Filled', 'Closed', 'Draft'];
-  static const _seekerTabs = ['Applied', 'Ongoing', 'Done', 'Saved'];
+  // 라벨은 i18n 키 → tr 로 변환해서 NoteTabBar 에 전달한다.
+  static const _employerTabKeys = [
+    'note.tabs.hiring',
+    'note.tabs.filled',
+    'note.tabs.closed',
+    'note.tabs.draft',
+  ];
+  static const _seekerTabKeys = [
+    'note.tabs.applied',
+    'note.tabs.ongoing',
+    'note.tabs.done',
+    'note.tabs.saved',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +52,9 @@ class NotePage extends GetView<NotePageController> {
             onTabSelected: isEmployer
                 ? controller.setEmployerTab
                 : controller.setSeekerTab,
-            tabs: isEmployer ? _employerTabs : _seekerTabs,
+            tabs: (isEmployer ? _employerTabKeys : _seekerTabKeys)
+                .map((k) => k.tr())
+                .toList(),
           ),
         ),
         Expanded(
@@ -50,11 +65,11 @@ class NotePage extends GetView<NotePageController> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
                   child: Text(
-                    'My History',
-                    style: TextStyle(
+                    'note.my_history'.tr(),
+                    style: const TextStyle(
                       fontFamily: 'Paperlogy',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -66,7 +81,9 @@ class NotePage extends GetView<NotePageController> {
                   child: jobs.isEmpty
                       ? Center(
                           child: Text(
-                            isEmployer ? 'No postings yet' : 'No history yet',
+                            isEmployer
+                                ? 'note.no_postings'.tr()
+                                : 'note.no_history'.tr(),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -117,7 +134,7 @@ class NotePage extends GetView<NotePageController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            AutoTranslateText(
               item['title'] as String,
               style: const TextStyle(
                 fontSize: 16,
@@ -126,7 +143,7 @@ class NotePage extends GetView<NotePageController> {
               ),
             ),
             const SizedBox(height: 2),
-            Text(
+            AutoTranslateText(
               item['employer'] as String,
               style: const TextStyle(
                 fontSize: 12,
@@ -228,7 +245,7 @@ class NotePage extends GetView<NotePageController> {
         borderRadius: BorderRadius.circular(4),
       ),
       alignment: Alignment.center,
-      child: Text(
+      child: AutoTranslateText(
         text,
         style: TextStyle(
           color: muted ? const Color(0xFF747474) : const Color(0xFF931515),

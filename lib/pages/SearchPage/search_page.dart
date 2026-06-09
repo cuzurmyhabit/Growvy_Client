@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../styles/colors.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/job_search_bar.dart';
 import '../../widgets/safe_back_app_bar.dart';
 
@@ -128,7 +129,7 @@ class _SearchPageState extends State<SearchPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          const AutoTranslateText(
                             'Recent searches',
                             style: TextStyle(
                               fontSize: 16,
@@ -139,7 +140,7 @@ class _SearchPageState extends State<SearchPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text(
+                              const AutoTranslateText(
                                 'auto save',
                                 style: TextStyle(
                                   fontSize: 14,
@@ -197,7 +198,7 @@ class _SearchPageState extends State<SearchPage> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
+                                AutoTranslateText(
                                   term,
                                   style: const TextStyle(
                                     fontSize: 14,
@@ -240,7 +241,7 @@ class _SearchPageState extends State<SearchPage> {
                           onTap: () {
                             setState(() => _recentSearches.clear());
                           },
-                          child: const Text(
+                          child: const AutoTranslateText(
                             'delete all',
                             style: TextStyle(
                               fontSize: 14,
@@ -252,7 +253,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
                       const SizedBox(height: 28),
-                      const Text(
+                      const AutoTranslateText(
                         'Popular searches',
                         style: TextStyle(
                           fontSize: 16,
@@ -288,7 +289,7 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
-                                  child: Text(
+                                  child: AutoTranslateText(
                                     title,
                                     style: TextStyle(
                                       fontSize: 16,

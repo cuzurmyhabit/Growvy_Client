@@ -30,6 +30,8 @@ dependencies:
   latlong2: ^0.9.1
   geolocator: ^13.0.2
   flutter_dotenv: ^6.0.1
+  easy_localization: ^3.0.8
+  translator: ^1.0.4+1
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +65,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/image/
+    - assets/translations/
     - .env
   
   fonts:

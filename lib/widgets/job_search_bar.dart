@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -13,7 +14,7 @@ class JobSearchBar extends StatelessWidget {
     super.key,
     required this.onTap,
     this.width,
-    this.hintText = 'search for jobs',
+    this.hintText,
   })  : controller = null,
         isSearching = false,
         onSubmitted = null,
@@ -28,7 +29,7 @@ class JobSearchBar extends StatelessWidget {
     this.onChanged,
     this.autofocus = false,
     this.width,
-    this.hintText = 'search for jobs',
+    this.hintText,
   }) : onTap = null;
 
   final VoidCallback? onTap;
@@ -38,7 +39,11 @@ class JobSearchBar extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool autofocus;
   final double? width;
-  final String hintText;
+
+  /// null 이면 기본 i18n hint('search.search_hint') 가 표시된다.
+  final String? hintText;
+
+  String _resolveHint() => hintText ?? 'search.search_hint'.tr();
 
   static const TextStyle hintStyle = TextStyle(
     fontSize: 14,
@@ -94,7 +99,7 @@ class JobSearchBar extends StatelessWidget {
   Widget _fakeHint() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Text(hintText, style: hintStyle),
+      child: Text(_resolveHint(), style: hintStyle),
     );
   }
 
@@ -104,7 +109,7 @@ class JobSearchBar extends StatelessWidget {
       autofocus: autofocus,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: _resolveHint(),
         hintStyle: hintStyle,
         border: InputBorder.none,
         isDense: true,

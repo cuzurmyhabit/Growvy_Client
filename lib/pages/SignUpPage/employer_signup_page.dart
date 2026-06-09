@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/custom_text_field.dart';
@@ -50,9 +51,9 @@ class _EmployerSignupPageState extends State<EmployerSignupPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'About you',
-                style: TextStyle(
+              Text(
+                'signup.about_you'.tr(),
+                style: const TextStyle(
                   color: AppColors.mainColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -62,8 +63,8 @@ class _EmployerSignupPageState extends State<EmployerSignupPage> {
 
               CustomTextField(
                 controller: _companyNameController,
-                label: 'Company Name',
-                hintText: 'Enter Company Name',
+                label: 'signup.company_name'.tr(),
+                hintText: 'signup.company_name_hint'.tr(),
               ),
 
               Row(
@@ -84,21 +85,21 @@ class _EmployerSignupPageState extends State<EmployerSignupPage> {
                           const BorderSide(color: Colors.grey, width: 1.5),
                     ),
                   ),
-                  const Text('Sole Proprietorship'),
+                  Text('signup.sole_proprietorship'.tr()),
                 ],
               ),
               const SizedBox(height: 7),
 
               CustomTextField(
                 controller: _businessAddressController,
-                label: '*Business Address',
-                hintText: 'Enter Business Address',
+                label: '*${'signup.business_address'.tr()}',
+                hintText: 'signup.business_address_hint'.tr(),
               ),
 
               const SizedBox(height: 24),
 
               NextButton(
-                text: 'Next',
+                text: 'common.next'.tr(),
                 onPressed: () {
                   Get.find<SignupDataController>().setEmployerInfo(
                     companyName: _companyNameController.text.trim(),

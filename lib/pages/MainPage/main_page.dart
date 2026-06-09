@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../styles/colors.dart';
 import '../../controllers/auth_controller.dart';
 import '../../widgets/nearby_job_card.dart';
@@ -13,6 +14,7 @@ import '../../controllers/note_page_controller.dart';
 import '../../widgets/job_application_list_modal.dart';
 import '../../widgets/my_job_openings_modal.dart';
 import '../../widgets/job_search_bar.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../SearchPage/search_page.dart';
 import '../ChatPage/chat_page.dart';
 import '../ChatPage/chat_detail_page.dart';
@@ -531,7 +533,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      "Calendar",
+                                      'main.calendar'.tr(),
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500,
@@ -596,7 +598,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      "Notification",
+                                      'main.notification'.tr(),
                                       style: TextStyle(
                                         fontSize: 9,
                                         fontWeight: FontWeight.w500,
@@ -634,19 +636,21 @@ class _HomePageContentState extends State<HomePageContent> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Center(
                           child: Text(
-                            "today's Task",
-                            style: TextStyle(
+                            'main.todays_task'.tr(),
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
                             ),
                           ),
                         ),
-                        Divider(height: 20, thickness: 1),
-                        Text(
-                          "Part-time café job in Sydney",
+                        const Divider(height: 20, thickness: 1),
+                        // DB 에서 영문으로 내려오는 더미 데이터.
+                        // AutoTranslateText 가 현재 locale 에 맞춰 자동 번역해 준다.
+                        const AutoTranslateText(
+                          'Part-time café job in Sydney',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -654,8 +658,8 @@ class _HomePageContentState extends State<HomePageContent> {
                             fontSize: 15,
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
+                        const SizedBox(height: 4),
+                        const Text(
                           "12:00 PM ~ 2:00 PM",
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
@@ -685,9 +689,9 @@ class _HomePageContentState extends State<HomePageContent> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "Job postings nearby",
-                          style: TextStyle(
+                        Text(
+                          'main.job_postings_nearby'.tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -714,7 +718,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
-                                  "Nearest",
+                                  'main.nearest'.tr(),
                                   style: TextStyle(
                                     color: _sortFilter == 'Nearest'
                                         ? AppColors.mainColor
@@ -748,7 +752,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
-                                  "Newest",
+                                  'main.newest'.tr(),
                                   style: TextStyle(
                                     color: _sortFilter == 'Newest'
                                         ? AppColors.mainColor
@@ -831,11 +835,11 @@ class _HomePageContentState extends State<HomePageContent> {
                   const SizedBox(height: 30),
 
                   // Popular Header
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      "Popular Jobs",
-                      style: TextStyle(
+                      'main.popular_jobs'.tr(),
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -924,10 +928,10 @@ class _HomePageContentState extends State<HomePageContent> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: const Text(
-                                      "See More",
+                                    child: Text(
+                                      'main.see_more'.tr(),
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color(0xFF3B3B3B),
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,

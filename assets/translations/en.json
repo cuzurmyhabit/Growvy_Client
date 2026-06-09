@@ -1,0 +1,186 @@
+{
+  "common": {
+    "next": "Next",
+    "cancel": "Cancel",
+    "save": "Save",
+    "continue": "Continue",
+    "skip": "Skip",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "done": "Done",
+    "delete": "Delete",
+    "edit": "Edit",
+    "share": "Share",
+    "apply": "Apply",
+    "search": "Search",
+    "back": "Back",
+    "more": "More",
+    "loading": "Loading...",
+    "accept": "Accept",
+    "discard": "Discard",
+    "sure": "Sure",
+    "select": "Select",
+    "see_more": "See More",
+    "add": "Add"
+  },
+  "language_picker": {
+    "title": "Choose your language",
+    "subtitle": "You can change this anytime in settings.",
+    "korean": "한국어",
+    "english": "English",
+    "continue": "Continue"
+  },
+  "welcome": {
+    "greeting": "Welcome!"
+  },
+  "translation_loading": {
+    "title": "Preparing Korean translations",
+    "subtitle": "We're translating the rest of the app so you won't see English again. Just a moment..."
+  },
+  "signup": {
+    "continue_with_google": "Continue With Google",
+    "google_login_failed": "Google login failed",
+    "are_you": "Are you",
+    "employer": "Employer",
+    "job_seeker": "Job seeker",
+    "about_you": "About you",
+
+    "name": "Name",
+    "name_hint": "Full Name",
+    "date_of_birth": "Date of Birth",
+    "date_of_birth_hint": "YYYY/MM/DD",
+    "phone_number": "Phone Number",
+    "phone_number_hint": "+61 0000 0000",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+
+    "company_name": "Company Name",
+    "company_name_hint": "Enter Company Name",
+    "sole_proprietorship": "Sole Proprietorship",
+    "business_address": "Business Address",
+    "business_address_hint": "Enter Business Address",
+
+    "home_address": "Home Address",
+    "home_address_hint": "Enter Home Address",
+    "career": "Career",
+    "career_hint": "Enter Your Career",
+    "introduction": "One Line Introduction",
+    "introduction_hint": "Enter Your Introduction",
+
+    "interest_title": "About you",
+    "interest_subtitle": "Choose your interests",
+    "interest_not_sure": "I don't know what I want to do...",
+
+    "survey": {
+      "intro_title_1": "Not sure what to choose?",
+      "intro_title_2": "No worries!",
+      "intro_subtitle": "Answer a few quick questions and\nwe'll find something that fits you.",
+      "done_title": "All Done!",
+      "done_subtitle": "Now let's look what kind of experience\nwe found just for you",
+      "lets_go": "Let's Go!",
+
+      "q1_title": "Energy Style",
+      "q1_subtitle": "\"What kind of work feels more comfortable for you?\"",
+      "q2_title": "Work Environment",
+      "q2_subtitle": "\"Where would you rather work?\"",
+      "q3_title": "Social Preference",
+      "q3_subtitle": "\"How do you feel about interacting with people at work?\"",
+      "q4_title": "Comfort Zone",
+      "q4_subtitle": "\"What kind of experience are you looking for?\"",
+      "q5_title": "Main Goal",
+      "q5_subtitle": "\"What matters most to you right now?\"",
+      "q6_title": "Work Pace / Lifestyle",
+      "q6_subtitle": "\"What kind of daily pace do you prefer?\""
+    },
+
+    "pick_profile": "Pick Your Profile",
+    "all_done": "All Done!",
+    "ready_to_start": "Ready to Start!"
+  },
+  "interests": {
+    "hospitality_fb": "Hospitality & F&B",
+    "retail_sales": "Retail & Sales",
+    "farm_seasonal": "Farm & Seasonal",
+    "manufacturing": "Manufacturing",
+    "factory_work": "Factory Work",
+    "cleaning_facilities": "Cleaning & Facilities",
+    "construction": "Construction",
+    "logistics_moving": "Logistics & Moving",
+    "events_festivals": "Events & Festivals",
+    "customer_service": "Customer Service",
+    "other_jobs": "Other Jobs"
+  },
+  "survey_options": {
+    "thinking_planning": "I prefer thinking and planning",
+    "hands_on": "I prefer hands-on, physical work",
+    "mix_of_both": "A mix of both sounds good",
+    "indoors": "Indoors (office, cafe, studio)",
+    "outdoors": "Outdoors (nature, farm, field)",
+    "either_env": "I'm okay with either",
+    "people_oriented": "I enjoy meeting and talking to people",
+    "solo": "I prefer working on my own",
+    "balanced_social": "A balance of both",
+    "new_exciting": "Something new and exciting",
+    "familiar_stable": "Something familiar and stable",
+    "open_anything": "I'm open to anything",
+    "earn_money": "Earning money",
+    "new_experience": "Gaining new experiences",
+    "build_career": "Building my career",
+    "recharge": "Taking a break and recharging",
+    "fast_paced": "Fast-paced and active",
+    "relaxed_steady": "Relaxed and steady",
+    "depends_day": "Depends on the day"
+  },
+  "main": {
+    "todays_task": "today's Task",
+    "todays_task_dummy": "Part-time café job in Sydney",
+    "calendar": "Calendar",
+    "notification": "Notification",
+    "job_postings_nearby": "Job postings nearby",
+    "popular_jobs": "Popular Jobs",
+    "nearest": "Nearest",
+    "newest": "Newest",
+    "see_more": "See More"
+  },
+  "job_detail": {
+    "apply": "apply",
+    "submit_application": "Submit Application?",
+    "application_submitted": "Application submitted successfully!"
+  },
+  "note": {
+    "my_history": "My History",
+    "no_postings": "No postings yet",
+    "no_history": "No history yet",
+    "tabs": {
+      "hiring": "Hiring",
+      "filled": "Filled",
+      "closed": "Closed",
+      "draft": "Draft",
+      "applied": "Applied",
+      "ongoing": "Ongoing",
+      "done": "Done",
+      "saved": "Saved"
+    }
+  },
+  "my_page": {
+    "my_reviews": "My Reviews",
+    "received": "Received",
+    "profile": "Profile",
+    "edit_profile": "Edit Profile"
+  },
+  "search": {
+    "search_hint": "Search for jobs",
+    "result_of": "Result of",
+    "location": "Location",
+    "apply": "Apply"
+  },
+  "chat": {
+    "chats": "Chats",
+    "no_messages": "No messages yet"
+  },
+  "map": {
+    "region": "Region"
+  }
+}

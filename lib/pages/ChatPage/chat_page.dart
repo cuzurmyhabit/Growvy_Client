@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:growvy_client/pages/ChatPage/chat_detail_page.dart';
+import '../../widgets/auto_translate_text.dart';
 
 class ChatListPage extends StatelessWidget {
   const ChatListPage({super.key});
@@ -28,11 +30,11 @@ class ChatListPage extends StatelessWidget {
                 const SizedBox(width: 16),
                 const Icon(Icons.search, color: Colors.grey),
                 const SizedBox(width: 10),
-                const Expanded(
+                Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'search for chats',
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintText: 'chat.chats'.tr(),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: InputBorder.none,
                     ),
                   ),
@@ -99,14 +101,14 @@ class ChatListPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      AutoTranslateText(
                         'User Name',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
                       ),
-                      Text(
+                      AutoTranslateText(
                         'Last Message text...',
                         style: TextStyle(
                           color: Color(0xFF747474),
@@ -121,7 +123,7 @@ class ChatListPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(height: 35),
-                    const Text(
+                    const AutoTranslateText(
                       'Month, Date, Year(Time)',
                       style: TextStyle(color: Colors.grey, fontSize: 10),
                     ),

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../styles/colors.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 /// 구인자용 Job Application List 모달. 아래에서 위로 슬라이드, 신청한 구직자 중 선택 후 Accept로 새 채팅방 생성.
 /// Accept 시 선택한 지원자 정보를 반환. [name], [profileImagePath].
@@ -135,7 +137,7 @@ class _ApplicantProfileSheetContentState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          AutoTranslateText(
             widget.applicant.name,
             textAlign: TextAlign.center,
             style: const TextStyle(
@@ -145,7 +147,7 @@ class _ApplicantProfileSheetContentState
             ),
           ),
           const SizedBox(height: 2),
-          Text(
+          AutoTranslateText(
             'She/Her',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 13, color: Colors.grey[600]),
@@ -214,7 +216,7 @@ class _ApplicantProfileSheetContentState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          AutoTranslateText(
             widget.applicant.name,
             textAlign: TextAlign.center,
             style: const TextStyle(
@@ -224,7 +226,7 @@ class _ApplicantProfileSheetContentState
             ),
           ),
           const SizedBox(height: 2),
-          Text(
+          AutoTranslateText(
             'She/Her',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 13, color: Colors.grey[600]),
@@ -271,7 +273,7 @@ class _ApplicantProfileSheetContentState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: Center(
-                  child: Text(
+                  child: AutoTranslateText(
                     'Check reviews',
                     style: const TextStyle(
                       color: Color(0xFF931515),
@@ -301,9 +303,9 @@ class _ApplicantProfileSheetContentState
           Center(
             child: GestureDetector(
               onTap: () {},
-              child: const Text(
-                'See More',
-                style: TextStyle(
+              child: Text(
+                'common.see_more'.tr(),
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF931515),
@@ -344,7 +346,7 @@ class _ApplicantProfileSheetContentState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
+                child: AutoTranslateText(
                   title,
                   style: const TextStyle(
                     fontSize: 13,
@@ -357,7 +359,7 @@ class _ApplicantProfileSheetContentState
             ],
           ),
           const SizedBox(height: 5),
-          Text(
+          AutoTranslateText(
             body,
             style: const TextStyle(
               fontSize: 11,
@@ -441,7 +443,7 @@ class _JobApplicationListContentState extends State<_JobApplicationListContent> 
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            const AutoTranslateText(
               'Job Application List',
               style: TextStyle(
                 fontSize: 22,
@@ -488,9 +490,9 @@ class _JobApplicationListContentState extends State<_JobApplicationListContent> 
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Accept',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  child: Text(
+                    'common.accept'.tr(),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -523,7 +525,7 @@ class _JobApplicationListContentState extends State<_JobApplicationListContent> 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      AutoTranslateText(
                         applicant.name,
                         style: const TextStyle(
                           fontSize: 16,

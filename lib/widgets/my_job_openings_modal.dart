@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 /// 구인자: 내 공고 선택 모달. 공고 선택 후 Select 시 해당 공고 지원자 목록(JobApplicationListModal)으로 이어짐.
 class MyJobOpeningsModal {
@@ -55,7 +56,7 @@ class _MyJobOpeningsContentState extends State<_MyJobOpeningsContent> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            const AutoTranslateText(
               'My Job Openings',
               style: TextStyle(
                 fontSize: 16,
@@ -98,7 +99,7 @@ class _MyJobOpeningsContentState extends State<_MyJobOpeningsContent> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
+                  child: const AutoTranslateText(
                     'Select',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
@@ -145,7 +146,7 @@ class _MyJobOpeningsContentState extends State<_MyJobOpeningsContent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    AutoTranslateText(
                       title,
                       style: const TextStyle(
                         fontSize: 16,
@@ -155,7 +156,7 @@ class _MyJobOpeningsContentState extends State<_MyJobOpeningsContent> {
                     ),
                     const SizedBox(height: 8),
                     Expanded(
-                      child: Text(
+                      child: AutoTranslateText(
                         body,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,

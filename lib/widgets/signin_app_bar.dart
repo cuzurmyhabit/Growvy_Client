@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'auto_translate_text.dart';
 
 class SignInAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canBack; // 뒤로가기 버튼 표시 여부 (기본값 true)
@@ -29,7 +30,7 @@ class SignInAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           : null,
-      title: const Text(
+      title: const AutoTranslateText(
         'Sign In',
         style: TextStyle(
           color: Colors.black,

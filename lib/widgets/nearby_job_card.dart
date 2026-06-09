@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../styles/colors.dart';
+import 'auto_translate_text.dart';
 
 class NearbyJobCard extends StatelessWidget {
   final String title;
@@ -36,7 +38,7 @@ class NearbyJobCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          AutoTranslateText(
             title,
             style: const TextStyle(
               fontWeight: FontWeight.w600,
@@ -48,7 +50,7 @@ class NearbyJobCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          Text(
+          AutoTranslateText(
             company,
             style: const TextStyle(
               fontWeight: FontWeight.w400,
@@ -85,9 +87,9 @@ class NearbyJobCard extends StatelessWidget {
                 border: Border.all(color: AppColors.mainColor),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Text(
-                "See More",
-                style: TextStyle(
+              child: Text(
+                'main.see_more'.tr(),
+                style: const TextStyle(
                   color: AppColors.mainColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
@@ -107,7 +109,7 @@ class NearbyJobCard extends StatelessWidget {
         color: const Color(0xFFFFEAEA),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text(
+      child: AutoTranslateText(
         text,
         style: const TextStyle(
           fontSize: 14,

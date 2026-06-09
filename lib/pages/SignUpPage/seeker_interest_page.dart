@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/next_button.dart';
@@ -21,22 +22,32 @@ class SeekerInterestPage extends StatefulWidget {
   State<SeekerInterestPage> createState() => _SeekerInterestPageState();
 }
 
+/// (백엔드에 전송되는 영어 라벨, 화면에 표시되는 i18n 키) 쌍.
+/// - [englishLabel] 은 [SignupDataController._interestIdByLabel] 의 키와 1:1.
+///   사용자가 어떤 언어로 보든 이 값으로 저장되어야 백엔드 매핑이 깨지지 않는다.
+/// - [i18nKey] 는 화면에 표시될 때 [tr] 로 변환된다.
+class _InterestOption {
+  final String englishLabel;
+  final String i18nKey;
+  const _InterestOption(this.englishLabel, this.i18nKey);
+}
+
 class _SeekerInterestPageState extends State<SeekerInterestPage> {
   // 시안 그대로 2열 배치를 위해 좌/우 컬럼을 분리해서 정의한다.
-  static const List<String> _leftColumn = [
-    'Hospitality & F&B',
-    'Farm & Seasonal',
-    'Factory Work',
-    'Construction',
-    'Events & Festivals',
-    'Other Jobs',
+  static const List<_InterestOption> _leftColumn = [
+    _InterestOption('Hospitality & F&B', 'interests.hospitality_fb'),
+    _InterestOption('Farm & Seasonal', 'interests.farm_seasonal'),
+    _InterestOption('Factory Work', 'interests.factory_work'),
+    _InterestOption('Construction', 'interests.construction'),
+    _InterestOption('Events & Festivals', 'interests.events_festivals'),
+    _InterestOption('Other Jobs', 'interests.other_jobs'),
   ];
-  static const List<String> _rightColumn = [
-    'Retail & Sales',
-    'Manufacturing',
-    'Cleaning & Facilities',
-    'Logistics & Moving',
-    'Customer Service',
+  static const List<_InterestOption> _rightColumn = [
+    _InterestOption('Retail & Sales', 'interests.retail_sales'),
+    _InterestOption('Manufacturing', 'interests.manufacturing'),
+    _InterestOption('Cleaning & Facilities', 'interests.cleaning_facilities'),
+    _InterestOption('Logistics & Moving', 'interests.logistics_moving'),
+    _InterestOption('Customer Service', 'interests.customer_service'),
   ];
 
   late final Set<String> _selected;
@@ -79,18 +90,18 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              const Text(
-                'About you',
-                style: TextStyle(
+              Text(
+                'signup.interest_title'.tr(),
+                style: const TextStyle(
                   color: AppColors.mainColor,
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Choose your interests',
-                style: TextStyle(
+              Text(
+                'signup.interest_subtitle'.tr(),
+                style: const TextStyle(
                   color: Color(0xFF747474),
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -100,15 +111,18 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
               _buildInterestGrid(),
               const SizedBox(height: 36),
               Center(
-                child: NextButton(text: 'Next', onPressed: _goNext),
+                child: NextButton(
+                  text: 'common.next'.tr(),
+                  onPressed: _goNext,
+                ),
               ),
               const SizedBox(height: 64),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: _openSurvey,
-                child: const Text(
-                  "I don't know what I want to do...",
-                  style: TextStyle(
+                child: Text(
+                  'signup.interest_not_sure'.tr(),
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF747474),
                     decoration: TextDecoration.underline,
@@ -138,7 +152,7 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
     );
   }
 
-  Widget _buildChipColumn(List<String> items) {
+  Widget _buildChipColumn(List<_InterestOption> items) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -150,16 +164,16 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
     );
   }
 
-  Widget _buildChip(String label) {
-    final selected = _selected.contains(label);
+  Widget _buildChip(_InterestOption option) {
+    final selected = _selected.contains(option.englishLabel);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         setState(() {
           if (selected) {
-            _selected.remove(label);
+            _selected.remove(option.englishLabel);
           } else {
-            _selected.add(label);
+            _selected.add(option.englishLabel);
           }
         });
       },
@@ -179,7 +193,7 @@ class _SeekerInterestPageState extends State<SeekerInterestPage> {
           ),
         ),
         child: Text(
-          label,
+          option.i18nKey.tr(),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 12,

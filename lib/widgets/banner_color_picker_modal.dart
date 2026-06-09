@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 /// 배너 색상 선택 모달. 프로필 선택 모달과 스타일 완전 동일(캐러셀 스택 + 인디케이터 + Save Changes).
 class BannerColorPickerModal {
@@ -109,7 +110,7 @@ class _BannerColorPickerContentState extends State<_BannerColorPickerContent> {
               ),
             ),
           ),
-          const Text(
+          const AutoTranslateText(
             'Pick Banner Color',
             style: TextStyle(
               fontSize: 22,
@@ -178,7 +179,7 @@ class _BannerColorPickerContentState extends State<_BannerColorPickerContent> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
+                child: const AutoTranslateText(
                   'Save Changes',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),

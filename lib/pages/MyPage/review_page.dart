@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../styles/colors.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/employer_note_tab_bar.dart';
 import 'review_detail_page.dart';
 
@@ -17,7 +19,8 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   int _selectedTab = 0;
 
-  static const List<String> _tabs = ['My Reviews', 'Received'];
+  // i18n 키 → tr 로 변환된 라벨이 NoteTabBar 에 전달됨.
+  static const List<String> _tabKeys = ['my_page.my_reviews', 'my_page.received'];
 
   /// 본문 배경: #F4BFB3 @ 11% (헤더와 탭바는 흰색 유지)
   static final Color _bodyBg = const Color(0xFFF4BFB3).withValues(alpha: 0.11);
@@ -98,7 +101,7 @@ class _ReviewPageState extends State<ReviewPage> {
         NoteTabBar(
           selectedIndex: _selectedTab,
           onTabSelected: (index) => setState(() => _selectedTab = index),
-          tabs: _tabs,
+          tabs: _tabKeys.map((k) => k.tr()).toList(),
           indicatorWidth: 179,
         ),
         Expanded(
@@ -174,7 +177,7 @@ class _ReviewPageState extends State<ReviewPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Text(
+                  child: AutoTranslateText(
                     title,
                     style: const TextStyle(
                       fontSize: 16,
@@ -187,7 +190,7 @@ class _ReviewPageState extends State<ReviewPage> {
               ],
             ),
             const SizedBox(height: 8),
-            Text(
+            AutoTranslateText(
               body,
               style: const TextStyle(
                 fontSize: 13,

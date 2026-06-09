@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../styles/colors.dart';
+import '../utils/auto_localize.dart';
+import 'auto_translate_text.dart';
 
 /// 지도 화면 Region 버튼 탭 시 오른쪽에서 슬라이드되는 지역 필터 패널.
 class RegionFilterPanel extends StatefulWidget {
@@ -176,10 +179,10 @@ class _RegionFilterPanelState extends State<RegionFilterPanel> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      const Center(
+                      Center(
                         child: Text(
-                          'Region',
-                          style: TextStyle(
+                          'map.region'.tr(),
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
@@ -229,9 +232,9 @@ class _RegionFilterPanelState extends State<RegionFilterPanel> {
                           Expanded(
                             child: TextField(
                               controller: _searchController,
-                              decoration: const InputDecoration(
-                                hintText: 'search for region',
-                                hintStyle: TextStyle(
+                              decoration: InputDecoration(
+                                hintText: autoLocalize(context, 'search for region'),
+                                hintStyle: const TextStyle(
                                   fontSize: 14,
                                   color: Color(0xFF8C8C8C),
                                   fontWeight: FontWeight.w400,
@@ -351,7 +354,7 @@ class _RegionFilterPanelState extends State<RegionFilterPanel> {
                                     ),
                                   ),
                                   const SizedBox(width: 12),
-                                  Text(
+                                  AutoTranslateText(
                                     displayName,
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -401,7 +404,7 @@ class _RegionFilterPanelState extends State<RegionFilterPanel> {
                         ),
                       ),
                       const SizedBox(width: 6),
-                      Text(
+                      AutoTranslateText(
                         _selectedRegion!,
                         style: const TextStyle(
                           fontSize: 14,

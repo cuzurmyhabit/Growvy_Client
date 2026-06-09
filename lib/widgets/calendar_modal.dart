@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../styles/colors.dart';
 import '../styles/modal_theme.dart';
-
+import 'auto_translate_text.dart';
 class CalendarModal extends StatefulWidget {
   const CalendarModal({super.key});
 
@@ -61,7 +62,7 @@ class _CalendarModalState extends State<CalendarModal> {
         child: StatefulBuilder(
           builder: (context, setDialogState) => AlertDialog(
             backgroundColor: Colors.white,
-            title: const Text(
+            title: const AutoTranslateText(
               'Select Year',
               style: TextStyle(color: Colors.black),
             ),
@@ -103,7 +104,10 @@ class _CalendarModalState extends State<CalendarModal> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+              child: Text(
+                'common.cancel'.tr(),
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -113,7 +117,10 @@ class _CalendarModalState extends State<CalendarModal> {
                 });
                 Navigator.pop(context);
               },
-              child: const Text('OK', style: TextStyle(color: AppColors.mainColor)),
+              child: Text(
+                'common.ok'.tr(),
+                style: const TextStyle(color: AppColors.mainColor),
+              ),
             ),
           ],
         ),
@@ -138,7 +145,7 @@ class _CalendarModalState extends State<CalendarModal> {
         child: StatefulBuilder(
           builder: (context, setDialogState) => AlertDialog(
             backgroundColor: Colors.white,
-            title: const Text(
+            title: const AutoTranslateText(
               'Select Month',
               style: TextStyle(color: Colors.black),
             ),
@@ -160,7 +167,7 @@ class _CalendarModalState extends State<CalendarModal> {
                         ? AppColors.mainColor.withOpacity(0.2)
                         : null,
                     child: Center(
-                      child: Text(
+                      child: AutoTranslateText(
                         _getMonthName(month),
                         style: TextStyle(
                           fontSize: 16,
@@ -180,7 +187,10 @@ class _CalendarModalState extends State<CalendarModal> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+              child: Text(
+                'common.cancel'.tr(),
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -190,7 +200,10 @@ class _CalendarModalState extends State<CalendarModal> {
                 });
                 Navigator.pop(context);
               },
-              child: const Text('OK', style: TextStyle(color: AppColors.mainColor)),
+              child: Text(
+                'common.ok'.tr(),
+                style: const TextStyle(color: AppColors.mainColor),
+              ),
             ),
           ],
         ),
@@ -210,11 +223,11 @@ class _CalendarModalState extends State<CalendarModal> {
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
-            // 흰색 캘린더 모달 박스
+            // 흰색 캘린더 모달 박스 (스크롤 없이 한 화면에 모두 보이도록 키움)
             Container(
-            width: 300,
-            height: 344,
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+            width: 340,
+            height: 560,
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -226,10 +239,9 @@ class _CalendarModalState extends State<CalendarModal> {
                 ),
               ],
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                   // 년/월 선택: w 86 h 26, 캘린더 SVG(년도), 년·월 각각 피커
                   Row(
                   children: [
@@ -301,7 +313,7 @@ class _CalendarModalState extends State<CalendarModal> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
+                                child: AutoTranslateText(
                                   _getMonthName(_currentMonth.month),
                                   style: TextStyle(
                                     fontSize: 13,
@@ -324,7 +336,7 @@ class _CalendarModalState extends State<CalendarModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
             // 요일 헤더
             Row(
@@ -332,7 +344,7 @@ class _CalendarModalState extends State<CalendarModal> {
               children: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
                   .map(
                     (day) => SizedBox(
-                      width: 36,
+                      width: 40,
                       child: Center(
                         child: Text(
                           day,
@@ -351,19 +363,19 @@ class _CalendarModalState extends State<CalendarModal> {
             // 달력 그리드
             _buildCalendarGrid(),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
             // 구분선
-            Container(width: 276, height: 1, color: const Color(0xFFF5F5F5)),
+            Container(width: double.infinity, height: 1, color: const Color(0xFFF5F5F5)),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
                 // Today's To Do List (이미지 스타일: 제목 굵게, 두 항목 가로 배치, 세로 구분선)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    AutoTranslateText(
                       "Today's To Do List",
                       style: TextStyle(
                         fontSize: 14,
@@ -375,7 +387,7 @@ class _CalendarModalState extends State<CalendarModal> {
                     _getTodosForDate(_selectedDate).isEmpty
                         ? Padding(
                             padding: const EdgeInsets.only(top: 4),
-                            child: Text(
+                            child: AutoTranslateText(
                               "No tasks for this day",
                               style: TextStyle(
                                 fontSize: 10,
@@ -411,8 +423,7 @@ class _CalendarModalState extends State<CalendarModal> {
                           ),
                   ],
                 ),
-                ],
-              ),
+              ],
             ),
           ),
           // X 버튼: 모달 밖 우상단, 크기 32
@@ -466,7 +477,7 @@ class _CalendarModalState extends State<CalendarModal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              AutoTranslateText(
                 todo['title']!,
                 style: TextStyle(
                   fontSize: 12,
@@ -477,6 +488,7 @@ class _CalendarModalState extends State<CalendarModal> {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
+              // 시간 형식은 숫자/AM-PM 이라 굳이 번역하지 않는다.
               Text(
                 todo['time']!,
                 style: TextStyle(
@@ -541,7 +553,7 @@ class _CalendarModalState extends State<CalendarModal> {
     final rows = (dayWidgets.length / 7).ceil();
 
     return SizedBox(
-      height: rows * 42.0, // 각 행의 높이 증가 (원이 잘리지 않도록)
+      height: rows * 44.0, // 각 행의 높이 증가 (원이 잘리지 않도록)
       child: GridView.count(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

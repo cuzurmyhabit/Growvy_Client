@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 /// 프로필 이미지 선택 모달. [onSelected]에 선택한 인덱스 전달.
 class ProfilePickerModal {
@@ -89,7 +90,7 @@ class _ProfilePickerContentState extends State<_ProfilePickerContent> {
               ),
             ),
           ),
-          const Text(
+          const AutoTranslateText(
             'Pick Your Profile',
             style: TextStyle(
               fontSize: 22,
@@ -161,7 +162,7 @@ class _ProfilePickerContentState extends State<_ProfilePickerContent> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
+                child: const AutoTranslateText(
                   'Save Changes',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),

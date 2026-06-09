@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../styles/modal_theme.dart';
+import 'auto_translate_text.dart';
 
 /// 확인 후 2초 뒤 자동으로 닫히는 완료 모달 (Share Complete! / Delete Complete! 등).
 /// ConfirmModal과 동일 크기 324x181, 가운데 check_icon.svg 77.
@@ -83,7 +84,7 @@ class _CompletionModalState extends State<CompletionModal> {
               const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
+                child: AutoTranslateText(
                   widget.message,
                   textAlign: TextAlign.center,
                   style: const TextStyle(

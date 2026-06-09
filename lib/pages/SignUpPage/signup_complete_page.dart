@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../bindings/main_binding.dart';
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
@@ -52,9 +53,9 @@ class _SignupCompletePageState extends State<SignupCompletePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'All Done!',
-              style: TextStyle(
+            Text(
+              'signup.all_done'.tr(),
+              style: const TextStyle(
                 color: AppColors.mainColor,
                 fontSize: 32,
                 fontWeight: FontWeight.w600,
@@ -65,7 +66,7 @@ class _SignupCompletePageState extends State<SignupCompletePage> {
               child: SizedBox(
                 width: 320,
                 child: NextButton(
-                  text: 'Ready to Start!',
+                  text: 'signup.ready_to_start'.tr(),
                   onPressed: _goToMain,
                 ),
               ),

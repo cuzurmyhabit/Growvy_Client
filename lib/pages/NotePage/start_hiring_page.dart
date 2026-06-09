@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../styles/colors.dart';
+import '../../utils/auto_localize.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../MainPage/job_detail_page.dart';
 
 /// 구인자가 새로운 공고를 작성하기 위한 다단계 입력 페이지.
@@ -246,12 +248,16 @@ class _StartHiringPageState extends State<StartHiringPage> {
           _menuOpen = false;
           _autoAdvancedSteps.remove(i);
         });
+        final stepLabel = _steps[i]['label']!.replaceAll('\n', ' ');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: const Duration(seconds: 2),
             backgroundColor: AppColors.mainColor,
             content: Text(
-              'Please complete "${_steps[i]['label']!.replaceAll('\n', ' ')}" first.',
+              autoLocalize(
+                context,
+                'Please complete "$stepLabel" first.',
+              ),
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -330,7 +336,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
             ),
             onPressed: _onBackPressed,
           ),
-          title: const Text(
+          title: const AutoTranslateText(
             'Start Hiring',
             style: TextStyle(
               color: Colors.black,
@@ -586,7 +592,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
           const SizedBox(height: 8),
           Row(
             children: [
-              const Text(
+              const AutoTranslateText(
                 'When is the Application Deadline?',
                 style: TextStyle(
                   fontSize: 14,
@@ -622,7 +628,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            const AutoTranslateText(
               'Ready To Start Hiring?',
               style: TextStyle(
                 fontFamily: 'Paperlogy',
@@ -646,7 +652,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
                     borderRadius: BorderRadius.circular(26),
                   ),
                 ),
-                child: const Text(
+                child: const AutoTranslateText(
                   'Publish',
                   style: TextStyle(
                     fontFamily: 'Paperlogy',
@@ -668,7 +674,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        AutoTranslateText(
           text,
           style: const TextStyle(
             fontSize: 16,
@@ -702,7 +708,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
       inputFormatters: inputFormatters,
       style: const TextStyle(fontSize: 14, color: Colors.black),
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: autoLocalize(context, hintText),
         hintStyle: const TextStyle(color: _labelGray, fontSize: 14),
         prefixText: prefixText,
         prefixStyle: const TextStyle(color: Colors.black, fontSize: 14),
@@ -737,7 +743,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
             color: selected ? AppColors.mainColor : _underlineGray,
           ),
         ),
-        child: Text(
+        child: AutoTranslateText(
           label,
           style: TextStyle(
             fontSize: 12,
@@ -767,7 +773,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
           ),
         ),
         child: Center(
-          child: Text(
+          child: AutoTranslateText(
             label,
             style: TextStyle(
               fontSize: 12,
@@ -796,7 +802,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          AutoTranslateText(
             dayLabel,
             style: const TextStyle(
               fontSize: 14,
@@ -811,7 +817,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  const AutoTranslateText(
                     'From',
                     style: TextStyle(fontSize: 12, color: _labelGray),
                   ),
@@ -825,7 +831,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  const AutoTranslateText(
                     'To',
                     style: TextStyle(fontSize: 12, color: _labelGray),
                   ),
@@ -1049,7 +1055,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
           .map(
             (l) => Expanded(
               child: Center(
-                child: Text(
+                child: AutoTranslateText(
                   l,
                   style: const TextStyle(
                     fontSize: 12,
@@ -1406,7 +1412,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
             const SizedBox(height: 2),
-            Text(
+            AutoTranslateText(
               _steps[index]['label']!,
               textAlign: TextAlign.center,
               style: TextStyle(

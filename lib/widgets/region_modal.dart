@@ -1,7 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../styles/colors.dart';
+import '../utils/auto_localize.dart';
+import 'auto_translate_text.dart';
 
 /// 검색 결과 화면의 'Location' 버튼에서 호출되는 우측 슬라이드 모달.
 /// 스타일은 [RegionFilterPanel](지도용)과 시각적으로 완전히 동일.
@@ -209,10 +212,10 @@ class _RegionModalState extends State<RegionModal> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      const Center(
+                      Center(
                         child: Text(
-                          'Region',
-                          style: TextStyle(
+                          'map.region'.tr(),
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
@@ -262,9 +265,9 @@ class _RegionModalState extends State<RegionModal> {
                           Expanded(
                             child: TextField(
                               controller: _searchController,
-                              decoration: const InputDecoration(
-                                hintText: 'search for region',
-                                hintStyle: TextStyle(
+                              decoration: InputDecoration(
+                                hintText: autoLocalize(context, 'search for region'),
+                                hintStyle: const TextStyle(
                                   fontSize: 14,
                                   color: Color(0xFF8C8C8C),
                                   fontWeight: FontWeight.w400,
@@ -381,7 +384,7 @@ class _RegionModalState extends State<RegionModal> {
                                     ),
                                   ),
                                   const SizedBox(width: 12),
-                                  Text(
+                                  AutoTranslateText(
                                     displayName,
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -433,7 +436,7 @@ class _RegionModalState extends State<RegionModal> {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Text(
+                        AutoTranslateText(
                           _selectedRegion!,
                           style: const TextStyle(
                             fontSize: 14,

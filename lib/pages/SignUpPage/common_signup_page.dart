@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../styles/colors.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/next_button.dart';
 import '../../widgets/signin_app_bar.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/auth_controller.dart';
 import '../../controllers/signup_data_controller.dart';
 import 'employer_signup_page.dart';
@@ -57,9 +58,9 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'About you',
-                style: TextStyle(
+              Text(
+                'signup.about_you'.tr(),
+                style: const TextStyle(
                   color: AppColors.mainColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -69,8 +70,8 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
 
               CustomTextField(
                 controller: _nameController,
-                label: '*Name',
-                hintText: 'Full Name',
+                label: '*${'signup.name'.tr()}',
+                hintText: 'signup.name_hint'.tr(),
                 keyboardType: TextInputType.name,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(
@@ -81,8 +82,8 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
 
               CustomTextField(
                 controller: _dobController,
-                label: '*Date of Birth',
-                hintText: 'YYYY/MM/DD',
+                label: '*${'signup.date_of_birth'.tr()}',
+                hintText: 'signup.date_of_birth_hint'.tr(),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -93,8 +94,8 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
 
               CustomTextField(
                 controller: _phoneController,
-                label: '*Phone Number',
-                hintText: '+61 0000 0000',
+                label: '*${'signup.phone_number'.tr()}',
+                hintText: 'signup.phone_number_hint'.tr(),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
@@ -109,9 +110,12 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
                   border: Border.all(color: const Color(0xFF747474)),
                   borderRadius: BorderRadius.circular(26),
                 ),
-                child: const Text(
-                  "Gender",
-                  style: TextStyle(fontSize: 14, color: Color(0xFF747474)),
+                child: Text(
+                  'signup.gender'.tr(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF747474),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -119,16 +123,16 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildCheckbox("Male"),
+                  _buildCheckbox("Male", 'signup.male'.tr()),
                   const SizedBox(width: 20),
-                  _buildCheckbox("Female"),
+                  _buildCheckbox("Female", 'signup.female'.tr()),
                 ],
               ),
 
               const SizedBox(height: 40),
 
               NextButton(
-                text: 'Next',
+                text: 'common.next'.tr(),
                 onPressed: () async {
                   // 1) 현재 단계 입력값을 컨트롤러에 누적
                   final signupData = Get.find<SignupDataController>();
@@ -169,7 +173,7 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
     );
   }
 
-  Widget _buildCheckbox(String genderValue) {
+  Widget _buildCheckbox(String genderValue, String label) {
     return Row(
       children: [
         Checkbox(
@@ -189,7 +193,7 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
             (states) => const BorderSide(color: Colors.grey, width: 1.5),
           ),
         ),
-        Text(genderValue),
+        Text(label),
       ],
     );
   }

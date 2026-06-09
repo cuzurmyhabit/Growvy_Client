@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/note_page_controller.dart';
 import '../../styles/colors.dart';
+import '../../widgets/auto_translate_text.dart';
 import '../../widgets/completion_modal.dart';
 import '../../widgets/confirm_modal.dart';
 
@@ -108,7 +110,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    AutoTranslateText(
                       _title,
                       style: const TextStyle(
                         fontSize: 22,
@@ -118,7 +120,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
+                    AutoTranslateText(
                       _employer,
                       style: const TextStyle(
                         fontSize: 14,
@@ -137,7 +139,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                       ),
                       const SizedBox(height: 18),
                     ],
-                    const Text(
+                    const AutoTranslateText(
                       'Overall Experience',
                       style: TextStyle(
                         fontSize: 14,
@@ -154,7 +156,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                       color: Color(0xFFF2F4F7),
                     ),
                     const SizedBox(height: 18),
-                    const Text(
+                    const AutoTranslateText(
                       'My experience',
                       style: TextStyle(
                         fontSize: 14,
@@ -361,7 +363,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: AppColors.mainColor),
               ),
-              child: Text(
+              child: AutoTranslateText(
                 s,
                 style: const TextStyle(
                   fontSize: 12,
@@ -382,7 +384,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         color: AppColors.mainColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
+      child: AutoTranslateText(
         _experience,
         style: const TextStyle(
           fontSize: 14,
@@ -403,7 +405,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE5E5E5)),
       ),
-      child: Text(
+      child: AutoTranslateText(
         _body.isEmpty ? '' : _body,
         style: const TextStyle(
           fontSize: 13,
@@ -420,8 +422,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     ConfirmModal.show(
       context: context,
       message: 'Do you want\nShare your note?',
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Sure',
+      acceptLabel: 'common.sure'.tr(),
       onCancel: () => Navigator.of(context).pop(),
       onAccept: () {
         Navigator.of(context).pop();
@@ -436,8 +437,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     ConfirmModal.show(
       context: context,
       message: 'Do you want\nDelete your note?',
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Sure',
+      acceptLabel: 'common.sure'.tr(),
       onCancel: () => Navigator.of(context).pop(),
       onAccept: () {
         Navigator.of(context).pop();

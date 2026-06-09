@@ -1,11 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../styles/colors.dart';
-import 'signin_page.dart';
+import 'signup_page.dart';
 
-/// 구글 로그인 직후 잠깐 보였다가 자동으로 사라지는 인사말 페이지.
+/// 언어 선택 직후 잠깐 보였다가 자동으로 사라지는 인사말 페이지.
 ///
-/// iPhone 부팅 직후 "Hello" 화면처럼, "Welcome!" 텍스트가 페이드 인 →
-/// 잠시 유지 → 페이드 아웃 된 뒤 자연스러운 fade 트랜지션으로 [SignInPage] 로 이동한다.
+/// iPhone 부팅 직후 "Hello" 화면처럼, "Welcome!"(또는 "환영합니다!") 텍스트가
+/// 페이드 인 → 잠시 유지 → 페이드 아웃 된 뒤 자연스러운 fade 트랜지션으로
+/// [SignUpPage] (구글 계정 선택) 로 이동한다.
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
@@ -54,7 +56,7 @@ class _WelcomePageState extends State<WelcomePage>
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 320),
-        pageBuilder: (_, _, _) => const SignInPage(),
+        pageBuilder: (_, _, _) => const SignUpPage(),
         transitionsBuilder: (_, animation, _, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -75,9 +77,9 @@ class _WelcomePageState extends State<WelcomePage>
       body: Center(
         child: FadeTransition(
           opacity: _fade,
-          child: const Text(
-            'Welcome!',
-            style: TextStyle(
+          child: Text(
+            'welcome.greeting'.tr(),
+            style: const TextStyle(
               color: AppColors.mainColor,
               fontSize: 36,
               fontWeight: FontWeight.w600,

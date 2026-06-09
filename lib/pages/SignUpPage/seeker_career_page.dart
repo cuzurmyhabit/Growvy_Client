@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/custom_text_field.dart';
@@ -44,9 +45,9 @@ class _SeekerCareerPageState extends State<SeekerCareerPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'About you',
-                style: TextStyle(
+              Text(
+                'signup.about_you'.tr(),
+                style: const TextStyle(
                   color: AppColors.mainColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -56,21 +57,21 @@ class _SeekerCareerPageState extends State<SeekerCareerPage> {
 
               CustomTextField(
                 controller: _careerController,
-                label: 'Career',
-                hintText: 'Enter Your Career',
+                label: 'signup.career'.tr(),
+                hintText: 'signup.career_hint'.tr(),
               ),
               const SizedBox(height: 16),
 
               CustomTextField(
                 controller: _introController,
-                label: 'One Line Introduction',
-                hintText: 'Enter Your Introduction',
+                label: 'signup.introduction'.tr(),
+                hintText: 'signup.introduction_hint'.tr(),
               ),
 
               const SizedBox(height: 48),
 
               NextButton(
-                text: 'Next',
+                text: 'common.next'.tr(),
                 onPressed: () {
                   // 필수 값이 아니라 그냥 trim 결과만 저장. 빈 문자열도 그대로 들어간다.
                   Get.find<SignupDataController>().setCareerInfo(
