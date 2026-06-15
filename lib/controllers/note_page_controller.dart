@@ -7,9 +7,12 @@ import '../controllers/auth_controller.dart';
 import '../pages/MainPage/job_detail_page.dart';
 import '../pages/NotePage/employer_note_write_page.dart';
 import '../pages/NotePage/seeker_note_write_page.dart';
+// 🚨 경로를 프로젝트에 맞게 수정해주세요! (보통 controllers 폴더와 services 폴더가 나란히 있습니다)
+import '../services/user_service.dart';
 
 class NotePageController extends GetxController {
   final selectedTab = 0.obs;
+
   /// 구인자 Note 상단 탭: 0 Hiring(모집중), 1 Ongoing(인원 확정·진행중), 2 Done(완료)
   ///
   /// - Hiring: 모집 마감일 전. 정원이 다 차도 마감일까지 여기에 머무르며
@@ -18,6 +21,7 @@ class NotePageController extends GetxController {
   /// - Done: 모든 일정이 끝남. 각 카드 우측에 Write Review 버튼이 떠
   ///   사람 선택 모달 → 별점 작성 페이지로 연결.
   final employerTabIndex = 0.obs;
+
   /// 구직자 Note 상단 탭: 0 Applying, 1 Done, 2 Volunteer
   final seekerTabIndex = 0.obs;
   final volunteerFilter = 1.obs; // 0: Draft, 1: Most recent
@@ -120,21 +124,35 @@ class NotePageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _syncEmployerFlag();
-    if (Get.isRegistered<AuthController>()) {
-      _employerTypeWorker?.dispose();
-      _employerTypeWorker = ever(AuthController.to.isEmployer, (_) {
-        _syncEmployerFlag();
-        fetchAllData();
-      });
-    }
-    fetchAllData();
+    _initEmployerState();
   }
 
   @override
   void onClose() {
     _employerTypeWorker?.dispose();
     super.onClose();
+  }
+
+  /// 🌟 기기 저장소에서 유저 타입을 가져와 UI 및 API 호출을 준비합니다.
+  Future<void> _initEmployerState() async {
+    // 1. 기기 저장소(UserService)에서 고용주 여부를 먼저 가져옵니다.
+    final isEmp = await UserService.isEmployer();
+    isEmployer = isEmp;
+    isEmployerObs.value = isEmp; // 이 순간 UI가 Employer 화면으로 변경됩니다!
+
+    // 2. AuthController 동기화 및 리스너 등록
+    if (Get.isRegistered<AuthController>()) {
+      AuthController.to.isEmployer.value = isEmp;
+
+      _employerTypeWorker?.dispose();
+      _employerTypeWorker = ever(AuthController.to.isEmployer, (_) {
+        _syncEmployerFlag();
+        fetchAllData();
+      });
+    }
+
+    // 3. 역할이 확정된 후 알맞은 API를 호출합니다.
+    await fetchAllData();
   }
 
   void _syncEmployerFlag() {
@@ -159,9 +177,7 @@ class NotePageController extends GetxController {
 
   // 1. 구직자 - 모집 중 (Recruitment)
   Future<void> fetchSeekerRecruitment() async {
-    final data = await _fetchFromApi(
-      "${Env.apiBaseUrl}/api/jobseeker/posts",
-    );
+    final data = await _fetchFromApi("${Env.apiBaseUrl}/api/jobseeker/posts");
     if (data != null) recruitmentHistory.assignAll(_mapApiData(data));
   }
 
@@ -193,9 +209,7 @@ class NotePageController extends GetxController {
 
   // 3. 구인자 - 모집 중 (Recruitment)
   Future<void> fetchEmployerRecruitment() async {
-    final data = await _fetchFromApi(
-      "${Env.apiBaseUrl}/api/employer/posts",
-    );
+    final data = await _fetchFromApi("${Env.apiBaseUrl}/api/employer/posts");
     if (data != null) {
       employerRecruitmentHistory.assignAll(
         _mapApiData(data, forEmployer: true),
@@ -271,7 +285,8 @@ class NotePageController extends GetxController {
             ? item['tags'][0]
             : (wage == 0 ? 'Volunteer' : 'Rookie'),
         'hasContent':
-            item['description'] != null && item['description'].toString().isNotEmpty,
+            item['description'] != null &&
+            item['description'].toString().isNotEmpty,
         'body': item['description'] ?? '',
         'photos': safePhotos, // 이제 확실한 List<String>이 저장됩니다.
         'hourlyWage': wage,
@@ -297,7 +312,8 @@ class NotePageController extends GetxController {
   }
 
   int _applicantsCurrent(Map<String, dynamic> item) {
-    final value = item['acceptedCount'] ??
+    final value =
+        item['acceptedCount'] ??
         item['applicantCount'] ??
         item['currentApplicants'] ??
         item['filledCount'];
@@ -306,7 +322,8 @@ class NotePageController extends GetxController {
   }
 
   int _applicantsTotal(Map<String, dynamic> item) {
-    final value = item['headcount'] ??
+    final value =
+        item['headcount'] ??
         item['maxApplicants'] ??
         item['openings'] ??
         item['recruitmentCount'] ??
@@ -342,9 +359,7 @@ class NotePageController extends GetxController {
         status == 'done') {
       return 'done';
     }
-    if (status == 'ongoing' ||
-        status == 'in_progress' ||
-        status == 'filled') {
+    if (status == 'ongoing' || status == 'in_progress' || status == 'filled') {
       return 'ongoing';
     }
     if (isDraft || status == 'draft') return 'hiring';
@@ -500,8 +515,8 @@ class NotePageController extends GetxController {
       'openingsText': '3 openings.',
       'description':
           'UGG Pop-Up Store is hiring outgoing crew members to assist '
-              'customers during our 4-week pop-up campaign. Shifts are '
-              'flexible (weekdays + weekends) and full training is provided.',
+          'customers during our 4-week pop-up campaign. Shifts are '
+          'flexible (weekdays + weekends) and full training is provided.',
     },
     {
       'title': 'Brand Ambassador',
@@ -517,7 +532,7 @@ class NotePageController extends GetxController {
       'openingsText': '4 openings.',
       'description':
           'Represent UGG at flagship stores across Sydney. Looking for '
-              'enthusiastic ambassadors for weekend shifts.',
+          'enthusiastic ambassadors for weekend shifts.',
     },
     {
       'title': 'Cashier',
@@ -533,7 +548,7 @@ class NotePageController extends GetxController {
       'openingsText': '1 opening.',
       'description':
           'Friendly cafe in Paddington looking for a cashier for the morning '
-              'rush (6am - 11am). Coffee knowledge is a plus.',
+          'rush (6am - 11am). Coffee knowledge is a plus.',
     },
     {
       'title': 'Barista',
@@ -549,7 +564,7 @@ class NotePageController extends GetxController {
       'openingsText': '2 openings.',
       'description':
           'Experienced barista (6+ months) wanted for our specialty coffee '
-              'bar. Latte art and pour-over experience preferred.',
+          'bar. Latte art and pour-over experience preferred.',
     },
     {
       'title': 'Office Assistant',
@@ -565,7 +580,7 @@ class NotePageController extends GetxController {
       'openingsText': '3 openings.',
       'description':
           'Support our 12-person team with light admin tasks: filing, '
-              'reception cover, and meeting prep. 3 days a week.',
+          'reception cover, and meeting prep. 3 days a week.',
     },
     {
       'title': 'Food Delivery Rider',
@@ -581,7 +596,7 @@ class NotePageController extends GetxController {
       'openingsText': '3 openings.',
       'description':
           'Deliver Asian cuisine across Sydney with our e-bike fleet. Bikes '
-              'and uniforms supplied.',
+          'and uniforms supplied.',
     },
     {
       'title': 'Event Helper',
@@ -597,7 +612,7 @@ class NotePageController extends GetxController {
       'openingsText': '4 openings.',
       'description':
           'Weekend pop-up at the Botanic Gardens. Help set up the booth, '
-              'serve samples, and pack down.',
+          'serve samples, and pack down.',
     },
   ];
 

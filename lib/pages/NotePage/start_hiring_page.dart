@@ -102,8 +102,6 @@ class _StartHiringPageState extends State<StartHiringPage> {
 
   // Basic Info
   final TextEditingController _jobTitleController = TextEditingController();
-  final TextEditingController _companyNameController = TextEditingController();
-  final TextEditingController _workLocationController = TextEditingController();
   String? _employmentType;
   final Set<String> _selectedIndustries = <String>{};
 
@@ -142,8 +140,6 @@ class _StartHiringPageState extends State<StartHiringPage> {
     // 모든 텍스트 컨트롤러 변경마다 자동 진행 조건을 재평가한다.
     for (final c in <TextEditingController>[
       _jobTitleController,
-      _companyNameController,
-      _workLocationController,
       _responsibilitiesController,
       _shiftDetailsController,
       _dateController,
@@ -158,8 +154,6 @@ class _StartHiringPageState extends State<StartHiringPage> {
   @override
   void dispose() {
     _jobTitleController.dispose();
-    _companyNameController.dispose();
-    _workLocationController.dispose();
     _responsibilitiesController.dispose();
     _shiftDetailsController.dispose();
     _dateController.dispose();
@@ -173,8 +167,6 @@ class _StartHiringPageState extends State<StartHiringPage> {
     switch (step) {
       case 0: // Basic Info
         return _jobTitleController.text.trim().isNotEmpty &&
-            _companyNameController.text.trim().isNotEmpty &&
-            _workLocationController.text.trim().isNotEmpty &&
             _employmentType != null &&
             _selectedIndustries.isNotEmpty;
       case 1: // Job Details
@@ -255,10 +247,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
             duration: const Duration(seconds: 2),
             backgroundColor: AppColors.mainColor,
             content: Text(
-              autoLocalize(
-                context,
-                'Please complete "$stepLabel" first.',
-              ),
+              autoLocalize(context, 'Please complete "$stepLabel" first.'),
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -267,21 +256,18 @@ class _StartHiringPageState extends State<StartHiringPage> {
       }
     }
 
-    final tags = <String>[
-      ?_employmentType,
-      ..._selectedIndustries,
-    ];
+    final tags = <String>[?_employmentType, ..._selectedIndustries];
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => JobDetailPage(
           title: _jobTitleController.text.trim(),
-          companyName: _companyNameController.text.trim(),
+          companyName: '',
           description: _responsibilitiesController.text.trim(),
           tags: tags,
           scheduleDate: _dateController.text.trim(),
           scheduleShifts: _buildShiftList(),
-          location: _workLocationController.text.trim(),
+          location: '',
           payText: _buildPayText(),
           openingsText: _buildOpeningsText(),
           // 본인이 방금 작성/게시한 공고이므로 상단 우측에 수정/삭제 아이콘 노출.
@@ -373,10 +359,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
                 layoutBuilder: (current, previous) {
                   return Stack(
                     alignment: Alignment.topCenter,
-                    children: [
-                      ...previous,
-                      ?current,
-                    ],
+                    children: [...previous, ?current],
                   );
                 },
                 child: KeyedSubtree(
@@ -385,11 +368,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
                 ),
               ),
             ),
-            Positioned(
-              right: 16,
-              bottom: 90,
-              child: _buildStepMenuArea(),
-            ),
+            Positioned(right: 16, bottom: 90, child: _buildStepMenuArea()),
           ],
         ),
       ),
@@ -407,18 +386,6 @@ class _StartHiringPageState extends State<StartHiringPage> {
           _buildUnderlineField(
             controller: _jobTitleController,
             hintText: 'Enter the Job Title',
-          ),
-          const SizedBox(height: 16),
-          _buildLabel('Company Name'),
-          _buildUnderlineField(
-            controller: _companyNameController,
-            hintText: 'Enter your business name',
-          ),
-          const SizedBox(height: 16),
-          _buildLabel('Work Location'),
-          _buildUnderlineField(
-            controller: _workLocationController,
-            hintText: 'Enter suburb, state (e.g. Fitzroy, VIC)',
           ),
           const SizedBox(height: 16),
           _buildLabel('Employment Type'),
@@ -922,9 +889,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
               ),
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.mainColor,
-              ),
+              style: TextButton.styleFrom(foregroundColor: AppColors.mainColor),
             ),
           ),
           child: child!,
@@ -1048,7 +1013,11 @@ class _StartHiringPageState extends State<StartHiringPage> {
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.black),
+            const Icon(
+              Icons.keyboard_arrow_down,
+              size: 16,
+              color: Colors.black,
+            ),
           ],
         ),
       ),
@@ -1117,7 +1086,8 @@ class _StartHiringPageState extends State<StartHiringPage> {
 
   Widget _buildDayCell(_DayCell cell, int year, int month) {
     final selected = _selectedDate;
-    final isSelected = !cell.isOtherMonth &&
+    final isSelected =
+        !cell.isOtherMonth &&
         selected != null &&
         selected.year == year &&
         selected.month == month &&
@@ -1209,10 +1179,8 @@ class _StartHiringPageState extends State<StartHiringPage> {
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 12),
               itemCount: items.length,
-              separatorBuilder: (_, _) => const Divider(
-                height: 1,
-                color: Color(0xFFF0F0F0),
-              ),
+              separatorBuilder: (_, _) =>
+                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
               itemBuilder: (_, i) {
                 final item = items[i];
                 final isCurrent = item == initial;
@@ -1221,10 +1189,8 @@ class _StartHiringPageState extends State<StartHiringPage> {
                     itemBuilder(item),
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight:
-                          isCurrent ? FontWeight.w600 : FontWeight.w400,
-                      color:
-                          isCurrent ? AppColors.mainColor : Colors.black,
+                      fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
+                      color: isCurrent ? AppColors.mainColor : Colors.black,
                     ),
                   ),
                   onTap: () => Navigator.of(ctx).pop(item),
@@ -1286,10 +1252,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
         layoutBuilder: (current, previous) {
           return Stack(
             alignment: Alignment.bottomRight,
-            children: [
-              ...previous,
-              ?current,
-            ],
+            children: [...previous, ?current],
           );
         },
         child: _menuOpen
@@ -1350,10 +1313,7 @@ class _StartHiringPageState extends State<StartHiringPage> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildLongToggleInner(),
-            _buildStepMenuInner(),
-          ],
+          children: [_buildLongToggleInner(), _buildStepMenuInner()],
         ),
       ),
     );

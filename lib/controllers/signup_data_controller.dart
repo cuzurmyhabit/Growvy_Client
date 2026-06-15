@@ -35,7 +35,6 @@ class SignupDataController extends GetxController {
   // --------------- 프로필 / 배너 이미지 ---------------
   String? profileImageAsset; // 화면용 (현재 선택된 asset path)
   int? profileImageId; // 백엔드 전송용 image id
-  int? bannerImageId; // 현재 선택 UI 가 없어 기본 0
 
   // --------------- Employer 전용 (EmployerSignupPage) ---------------
   String? companyName;
@@ -67,7 +66,7 @@ class SignupDataController extends GetxController {
     'Events & Festivals': 9,
     'Customer Service': 10,
     'Other Jobs': 11,
-    
+
     // ENERGY_STYLE (12~14)
     'I prefer thinking and planning': 12,
     'I prefer hands-on, physical work': 13,
@@ -133,10 +132,6 @@ class SignupDataController extends GetxController {
   void setProfileImage(String assetPath, {int? id}) {
     profileImageAsset = assetPath;
     if (id != null) profileImageId = id;
-  }
-
-  void setBannerImageId(int id) {
-    bannerImageId = id;
   }
 
   void setEmployerInfo({
@@ -209,10 +204,7 @@ class SignupDataController extends GetxController {
     final phone = (phoneNumber ?? '').trim();
     final g = (gender ?? '').trim();
     // 생일은 YYYY/MM/DD 10글자 모두 채워졌을 때만 유효한 것으로 본다.
-    return n.isNotEmpty &&
-        phone.isNotEmpty &&
-        g.isNotEmpty &&
-        dob.length == 10;
+    return n.isNotEmpty && phone.isNotEmpty && g.isNotEmpty && dob.length == 10;
   }
 
   /// EmployerSignupPage 의 필수: 회사명 + 사업장 주소.
@@ -290,7 +282,6 @@ class SignupDataController extends GetxController {
       'gender': _formatGender(gender),
       'phone': phoneNumber ?? '',
       'profileImageId': profileImageId ?? 0,
-      'bannerImageId': bannerImageId ?? 0,
     };
     if (isEmployer == true) {
       base.addAll(<String, dynamic>{
@@ -370,6 +361,7 @@ class SignupDataController extends GetxController {
     return SignupRepository.submit(
       isEmployer: isEmployer == true,
       payload: toPayload(),
+      googleIdToken: googleIdToken,
     );
   }
 
@@ -386,7 +378,6 @@ class SignupDataController extends GetxController {
     gender = null;
     profileImageAsset = null;
     profileImageId = null;
-    bannerImageId = null;
     companyName = null;
     isSoleProprietorship = null;
     businessAddress = null;

@@ -8,6 +8,7 @@ import '../../controllers/signup_data_controller.dart';
 import '../../services/auth_repository.dart';
 import '../../services/token_storage.dart';
 import 'signin_page.dart';
+import '../MainPage/main_page.dart'; // 💡 메인 페이지 import 추가 (경로는 프로젝트 구조에 맞게 확인해주세요)
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -26,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   /// 로그인 중복 클릭 방지 + 로딩 인디케이터 토글.
   bool _isLoggingIn = false;
 
-  /// 구글 계정으로 로그인 → Firebase 인증 → SignInPage 로 진입.
+  /// 구글 계정으로 로그인 → Firebase 인증 → 분기 처리(MainPage or SignInPage) 진입.
   Future<void> _signInWithGoogle() async {
     if (_isLoggingIn) return;
     setState(() => _isLoggingIn = true);
@@ -46,8 +47,6 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       final firebaseIdToken = await userCredential.user!.getIdToken();
 
-      // 1000+자 JWT 를 print 로 통째로 찍으면 IDE 콘솔이 막혀 앱이 렉 걸린
-      // 것처럼 보인다. debugPrint + 길이만 남긴다.
       debugPrint('[SignUp] Firebase UID: ${userCredential.user?.uid}');
       debugPrint(
         '[SignUp] Firebase ID Token length: ${firebaseIdToken?.length ?? 0}',
@@ -62,25 +61,40 @@ class _SignUpPageState extends State<SignUpPage> {
         idToken: firebaseIdToken,
       );
 
-      // 이후 API 호출이 자동으로 Authorization 헤더를 붙일 수 있게
-      // Firebase ID Token 을 SecureStorage 에 저장.
-      // 백엔드 자체 access/refresh token 발급 API 가 생기면
-      // AuthRepository.exchangeFirebaseTokenForAccess(...) 를 여기서 호출.
+      bool isRegistered = false; // 💡 가입 여부를 담을 변수 추가
+
+      // API 호출하여 Firebase 토큰 전달 및 자체 토큰 발급, 가입 여부 확인
       if (firebaseIdToken != null && firebaseIdToken.isNotEmpty) {
         await TokenStorage.saveFirebaseIdToken(firebaseIdToken);
-        await AuthRepository.exchangeFirebaseTokenForAccess(firebaseIdToken);
+        // 수정한 repository 메서드에서 가입 여부(true/false)를 반환받음
+        isRegistered = await AuthRepository.exchangeFirebaseTokenForAccess(
+          firebaseIdToken,
+        );
       }
 
       if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 320),
-          pageBuilder: (_, _, _) => const SignInPage(),
-          transitionsBuilder: (_, animation, _, child) =>
-              FadeTransition(opacity: animation, child: child),
-        ),
-      );
+
+      // 💡 가입 여부에 따른 페이지 이동 분기 처리
+      if (isRegistered) {
+        // 🟢 기존 회원이면 MainPage 로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const MainPage(), // 메인 페이지 클래스명에 맞게 수정
+          ),
+        );
+      } else {
+        // 🟡 신규 회원이면 추가 정보 입력(SignInPage) 로 이동
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 320),
+            pageBuilder: (_, _, _) => const SignInPage(),
+            transitionsBuilder: (_, animation, _, child) =>
+                FadeTransition(opacity: animation, child: child),
+          ),
+        );
+      }
     } catch (e) {
       debugPrint('[SignUp] Google login error: $e');
       if (!mounted) return;
@@ -117,7 +131,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       width: 318,
                       height: 48,
                       child: ElevatedButton(
-                        // 로그인 중에는 onPressed 를 null 로 두어 중복 클릭 차단.
                         onPressed: _isLoggingIn ? null : _signInWithGoogle,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -127,8 +140,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          // disabled 상태에서도 동일한 흰색을 유지해서 색이
-                          // 회색으로 튀어 보이지 않게 한다.
                           disabledBackgroundColor: Colors.white,
                           disabledForegroundColor: Colors.black54,
                         ),
@@ -169,12 +180,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
 
-            // 로그인 진행 중엔 다른 탭/스와이프를 막아서 추가 입력이 큐에
-            // 쌓이는 걸 방지한다.
             if (_isLoggingIn)
-              const Positioned.fill(
-                child: AbsorbPointer(absorbing: true),
-              ),
+              const Positioned.fill(child: AbsorbPointer(absorbing: true)),
           ],
         ),
       ),

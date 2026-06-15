@@ -25,7 +25,8 @@ class UserProfileController extends GetxController {
   /// SignupCompletePage 가 백엔드 submit 직후 호출.
   void hydrateFromSignup(SignupDataController s) {
     final idx = (s.profileImageId ?? 1) - 1;
-    final asset = s.profileImageAsset ??
+    final asset =
+        s.profileImageAsset ??
         'assets/image/test_profile${idx.clamp(0, 8) + 1}.png';
     profile.value = UserProfile(
       email: s.googleEmail,
@@ -37,7 +38,6 @@ class UserProfileController extends GetxController {
       isEmployer: s.isEmployer == true,
       profileImageId: s.profileImageId,
       profileImageAsset: asset,
-      bannerImageId: s.bannerImageId,
       companyName: s.companyName,
       businessAddress: s.businessAddress,
       homeAddress: s.homeAddress,

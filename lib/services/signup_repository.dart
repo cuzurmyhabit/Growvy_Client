@@ -11,11 +11,14 @@ class SignupRepository {
 
   /// 백엔드 endpoint 가 준비됐을 때만 true 로 변경.
   /// 또는 dart-define 로 주입: `--dart-define=API_ENABLED=true`
-  static const bool enabled =
-      bool.fromEnvironment('API_ENABLED', defaultValue: false);
+  static const bool enabled = bool.fromEnvironment(
+    'API_ENABLED',
+    defaultValue: true,
+  );
 
-  static const String _seekerPath = '/api/users/seeker';
-  static const String _employerPath = '/api/users/employer';
+  // 알려주신 백엔드 엔드포인트로 경로 수정
+  static const String _seekerPath = 'auth/signup/jobseeker';
+  static const String _employerPath = 'auth/signup/employer';
 
   /// 회원가입 페이로드를 백엔드로 전송.
   /// 응답으로 생성된 user JSON 을 반환한다 (없으면 빈 map).
@@ -24,14 +27,24 @@ class SignupRepository {
   static Future<Map<String, dynamic>> submit({
     required bool isEmployer,
     required Map<String, dynamic> payload,
+    String? googleIdToken, // 구글 토큰 파라미터 추가
   }) async {
     if (!enabled) {
       debugPrint(
-        '[SignupRepository] (stub, API_ENABLED=false) payload=$payload',
+        '[SignupRepository] (stub, API_ENABLED=false) payload=$payload\ntoken=$googleIdToken',
       );
       return <String, dynamic>{};
     }
+
     final path = isEmployer ? _employerPath : _seekerPath;
-    return ApiClient.post(path, body: payload);
+
+    // 헤더에 구글 토큰 세팅 (Bearer 방식 등 서버 스펙에 맞춰 수정 가능)
+    final headers = <String, String>{};
+    if (googleIdToken != null && googleIdToken.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $googleIdToken';
+    }
+
+    // ApiClient 의 post 메서드에 header 를 넘겨서 전송
+    return ApiClient.post(path, body: payload, headers: headers);
   }
 }

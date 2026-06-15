@@ -29,22 +29,34 @@ class ApiClient {
   static const Duration _timeout = Duration(seconds: 30);
 
   static Future<Map<String, dynamic>> get(String path) async {
-    final res = await _send(() async => http.get(
-          _uri(path),
-          headers: await _headers(),
-        ));
+    final res = await _send(
+      () async => http.get(_uri(path), headers: await _headers()),
+    );
     return _decode(res);
   }
+
+  // 기존 get, patch, delete는 놔두고 post 함수를 아래와 같이 수정합니다.
 
   static Future<Map<String, dynamic>> post(
     String path, {
     Map<String, dynamic>? body,
+    Map<String, String>? headers, // <-- 파라미터 추가!
   }) async {
-    final res = await _send(() async => http.post(
-          _uri(path),
-          headers: await _headers(),
-          body: body == null ? null : jsonEncode(body),
-        ));
+    // 1. 기본 헤더(토큰 등)를 가져옵니다.
+    final baseHeaders = await _headers();
+
+    // 2. 밖에서 넘겨준 커스텀 헤더가 있다면 덮어씌웁니다 (병합).
+    if (headers != null) {
+      baseHeaders.addAll(headers);
+    }
+
+    final res = await _send(
+      () async => http.post(
+        _uri(path),
+        headers: baseHeaders, // <-- 병합된 최종 헤더 사용
+        body: body == null ? null : jsonEncode(body),
+      ),
+    );
     return _decode(res);
   }
 
@@ -52,19 +64,20 @@ class ApiClient {
     String path, {
     Map<String, dynamic>? body,
   }) async {
-    final res = await _send(() async => http.patch(
-          _uri(path),
-          headers: await _headers(),
-          body: body == null ? null : jsonEncode(body),
-        ));
+    final res = await _send(
+      () async => http.patch(
+        _uri(path),
+        headers: await _headers(),
+        body: body == null ? null : jsonEncode(body),
+      ),
+    );
     return _decode(res);
   }
 
   static Future<Map<String, dynamic>> delete(String path) async {
-    final res = await _send(() async => http.delete(
-          _uri(path),
-          headers: await _headers(),
-        ));
+    final res = await _send(
+      () async => http.delete(_uri(path), headers: await _headers()),
+    );
     return _decode(res);
   }
 
@@ -107,10 +120,7 @@ class ApiClient {
     try {
       return await request().timeout(_timeout);
     } on TimeoutException {
-      throw const ApiException(
-        statusCode: 0,
-        message: 'Request timed out',
-      );
+      throw const ApiException(statusCode: 0, message: 'Request timed out');
     } catch (e) {
       throw ApiException(statusCode: 0, message: 'Network error: $e');
     }

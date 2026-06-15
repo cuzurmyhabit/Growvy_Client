@@ -1,4 +1,5 @@
-import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
+import 'package:easy_localization/easy_localization.dart'
+    hide StringTranslateExtension;
 import '../../i18n/app_translations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,9 +146,9 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildCheckbox("Male", 'signup.male'.tr()),
+                  _buildCheckbox("MALE", 'signup.male'.tr()),
                   const SizedBox(width: 20),
-                  _buildCheckbox("Female", 'signup.female'.tr()),
+                  _buildCheckbox("FEMALE", 'signup.female'.tr()),
                 ],
               ),
 
@@ -169,8 +170,9 @@ class _CommonSignUpPageState extends State<CommonSignUpPage> {
                         );
 
                         // 2) 기존대로 사용자 타입 저장 후 다음 화면으로 이동
-                        await Get.find<AuthController>()
-                            .saveUserType(widget.isEmployer);
+                        await Get.find<AuthController>().saveUserType(
+                          widget.isEmployer,
+                        );
                         if (!context.mounted) return;
                         if (widget.isEmployer) {
                           Navigator.push(
