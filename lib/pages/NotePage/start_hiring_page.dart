@@ -1,9 +1,15 @@
+import 'dart:async';
+
+import '../../i18n/app_translations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart' hide Trans;
+import '../../controllers/job_post_data_controller.dart';
 import '../../models/job_shift.dart';
 import '../../styles/colors.dart';
 import '../../utils/auto_localize.dart';
+import '../../utils/interest_ids.dart';
 import '../../widgets/auto_translate_text.dart';
 import '../MainPage/job_detail_page.dart';
 
@@ -31,27 +37,11 @@ class _StartHiringPageState extends State<StartHiringPage> {
     {'label': 'Publish', 'icon': 'assets/icon/publish_icon.svg'},
   ];
 
-  static const List<String> _employmentTypes = [
-    'Casual',
-    'Part-time',
-    'Full-time',
-    'Contract',
-    'Temporary',
-  ];
-
-  static const List<String> _industries = [
-    'Hospitality & F&B',
-    'Retail & Sales',
-    'Farm & Seasonal',
-    'Manufacturing',
-    'Factory Work',
-    'Cleaning & Facilities',
-    'Construction',
-    'Logistics & Moving',
-    'Events & Festivals',
-    'Customer Service',
-    'Other Jobs',
-  ];
+  // Employment / Industry 옵션은 백엔드 DB seed id 와 1:1.
+  // 화면 표시는 i18nKey 를 tr() 변환하고, 백엔드 전송에는 id 만 보낸다.
+  // (회원가입 단계의 SeekerInterestPage / SeekerSurveyPage 와 동일한 패턴)
+  static const List<IdOption> _employmentOptions = IdCatalog.employmentTypes;
+  static const List<IdOption> _industryOptions = IdCatalog.industries;
 
   static const List<String> _weekDays = [
     'SUN',
@@ -103,8 +93,10 @@ class _StartHiringPageState extends State<StartHiringPage> {
 
   // Basic Info
   final TextEditingController _jobTitleController = TextEditingController();
-  String? _employmentType;
-  final Set<String> _selectedIndustries = <String>{};
+  /// 선택된 EMPLOYMENT id (31~35). 백엔드로 그대로 전송.
+  int? _employmentTypeId;
+  /// 선택된 INDUSTRY id 들 (1~11). 백엔드로 그대로 전송.
+  final Set<int> _selectedIndustryIds = <int>{};
 
   // Job Details
   final TextEditingController _responsibilitiesController =
@@ -157,8 +149,8 @@ class _StartHiringPageState extends State<StartHiringPage> {
     switch (step) {
       case 0: // Basic Info
         return _jobTitleController.text.trim().isNotEmpty &&
-            _employmentType != null &&
-            _selectedIndustries.isNotEmpty;
+            _employmentTypeId != null &&
+            _selectedIndustryIds.isNotEmpty;
       case 1: // Job Details
         return _responsibilitiesController.text.trim().isNotEmpty &&
             _shiftDetailsController.text.trim().isNotEmpty &&
@@ -235,7 +227,58 @@ class _StartHiringPageState extends State<StartHiringPage> {
       }
     }
 
-    final tags = <String>[?_employmentType, ..._selectedIndustries];
+    // 1) 현재 화면 입력을 JobPostDataController 에 누적.
+    //    회원가입과 동일 패턴: 컨트롤러가 단일 진실 원천(SSOT).
+    final jobPost = Get.find<JobPostDataController>();
+    jobPost
+      ..setBasicInfo(
+        title: _jobTitleController.text.trim(),
+        employmentTypeId: _employmentTypeId,
+        industryIds: _selectedIndustryIds,
+      )
+      ..setJobDetails(
+        responsibilities: _responsibilitiesController.text.trim(),
+        shiftDetails: _shiftDetailsController.text.trim(),
+        scheduleDateRange: _dateController.text.trim(),
+        numberOfHires: int.tryParse(_peopleCountController.text.trim()),
+        selectedDayIndices: _selectedDayIndices,
+        dayTimes: {
+          for (final i in _selectedDayIndices)
+            i: JobTimeRange(
+              from: (_dayTimes[i] ?? _defaultRange).from,
+              to: (_dayTimes[i] ?? _defaultRange).to,
+            ),
+        },
+      )
+      ..setPayBenefits(
+        hourlyRate: _hourlyRateController.text.trim(),
+        penaltyRate: _penaltyRateController.text.trim(),
+        superannuation: _superannuation,
+      )
+      ..setApplicationDeadline(_selectedDate);
+
+    debugPrint('[StartHiring] ${jobPost.describeForDebug()}');
+
+    // 2) 백엔드로는 fire-and-forget. SignupCompletePage 와 같은 정책.
+    //    네트워크 응답을 기다리지 않고 곧장 JobDetailPage 로 진입한다.
+    unawaited(
+      jobPost.submitToBackend().then((created) {
+        debugPrint(
+          '[StartHiring] (bg) job submit 응답 — empty=${created.isEmpty}',
+        );
+      }).catchError((Object e) {
+        debugPrint('[StartHiring] (bg) job submit error: $e');
+      }),
+    );
+
+    // 3) 화면 표시용 tags 는 i18n 라벨로 변환된 문자열.
+    final tags = <String>[
+      if (_employmentTypeId != null)
+        IdCatalog.byId(_employmentTypeId!)?.i18nKey.tr() ?? '',
+      ..._selectedIndustryIds.map(
+        (id) => IdCatalog.byId(id)?.i18nKey.tr() ?? '',
+      ),
+    ].where((s) => s.isNotEmpty).toList();
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
@@ -254,6 +297,10 @@ class _StartHiringPageState extends State<StartHiringPage> {
         ),
       ),
     );
+
+    // 4) 다음 공고 작성을 위해 누적값 초기화 (백그라운드 submit 의 toPayload() 는
+    //    이미 호출 직후 평가되었으므로 안전).
+    jobPost.reset();
   }
 
   /// 작성한 요일별 시간을 [JobShift] 리스트로 변환. JobDetailPage 의 시계
@@ -372,13 +419,13 @@ class _StartHiringPageState extends State<StartHiringPage> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _employmentTypes.map((type) {
+            children: _employmentOptions.map((opt) {
+              final isSelected = _employmentTypeId == opt.id;
               return _buildChoiceChip(
-                label: type,
-                selected: _employmentType == type,
+                label: opt.i18nKey.tr(),
+                selected: isSelected,
                 onTap: () {
-                  setState(() => _employmentType = type);
-                  _maybeAdvance();
+                  setState(() => _employmentTypeId = opt.id);
                 },
               );
             }).toList(),
@@ -389,20 +436,19 @@ class _StartHiringPageState extends State<StartHiringPage> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _industries.map((item) {
-              final isSelected = _selectedIndustries.contains(item);
+            children: _industryOptions.map((opt) {
+              final isSelected = _selectedIndustryIds.contains(opt.id);
               return _buildChoiceChip(
-                label: item,
+                label: opt.i18nKey.tr(),
                 selected: isSelected,
                 onTap: () {
                   setState(() {
                     if (isSelected) {
-                      _selectedIndustries.remove(item);
+                      _selectedIndustryIds.remove(opt.id);
                     } else {
-                      _selectedIndustries.add(item);
+                      _selectedIndustryIds.add(opt.id);
                     }
                   });
-                  _maybeAdvance();
                 },
               );
             }).toList(),

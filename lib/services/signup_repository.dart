@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import 'api_client.dart';
+import 'token_storage.dart';
 
 /// 회원가입 단계의 모든 입력을 한 번에 백엔드로 보내는 repository.
 ///
@@ -54,11 +55,21 @@ class SignupRepository {
       // ApiClient 기본 30초 timeout 은 사용자가 "Ready to Start" 누르고
       // 한참 멈춘 것처럼 보이게 만든다. submit 단계만 더 짧게(8초) 감싸서
       // 백엔드가 없으면 빠르게 빈 map 으로 떨어지도록 한다.
-      return await ApiClient.post(
+      final res = await ApiClient.post(
         path,
         body: payload,
         headers: headers,
       ).timeout(const Duration(seconds: 8));
+
+      // 로그인(`auth/login`) 과 동일한 형식으로 회원가입 응답에서도
+      // accessToken 이 내려오면 곧장 저장해 둔다. 이후 ApiClient 의
+      // _headers() 가 자동으로 Bearer <accessToken> 을 첨부한다.
+      final jwt = res['accessToken'] as String?;
+      if (jwt != null && jwt.isNotEmpty) {
+        await TokenStorage.saveAccessToken(jwt);
+        debugPrint('[SignupRepository] accessToken 저장 완료');
+      }
+      return res;
     } on TimeoutException catch (e) {
       debugPrint('[SignupRepository] backend timeout(8s) → 빈 응답으로 fallback: $e');
       return <String, dynamic>{};

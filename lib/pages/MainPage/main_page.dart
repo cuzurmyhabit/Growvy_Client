@@ -225,7 +225,6 @@ class HomePageContent extends StatefulWidget {
 }
 
 class _HomePageContentState extends State<HomePageContent> {
-  String _sortFilter = 'Newest';
   bool _isCalendarOpen = false;
   bool _isNotificationOpen = false;
 
@@ -609,91 +608,15 @@ class _HomePageContentState extends State<HomePageContent> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nearby Header
+                  // Nearby Header (sort 토글은 제거 — 제목만 노출)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'main.job_postings_nearby'.tr(),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _sortFilter = 'Nearest';
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _sortFilter == 'Nearest'
-                                      ? AppColors.subColor.withValues(
-                                          alpha: 0.2,
-                                        )
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  'main.nearest'.tr(),
-                                  style: TextStyle(
-                                    color: _sortFilter == 'Nearest'
-                                        ? AppColors.mainColor
-                                        : Colors.grey[600],
-                                    fontSize: 12,
-                                    fontWeight: _sortFilter == 'Nearest'
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _sortFilter = 'Newest';
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _sortFilter == 'Newest'
-                                      ? AppColors.subColor.withValues(
-                                          alpha: 0.2,
-                                        )
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  'main.newest'.tr(),
-                                  style: TextStyle(
-                                    color: _sortFilter == 'Newest'
-                                        ? AppColors.mainColor
-                                        : Colors.grey[600],
-                                    fontSize: 12,
-                                    fontWeight: _sortFilter == 'Newest'
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    child: Text(
+                      'main.customized_job_postings'.tr(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -706,20 +629,8 @@ class _HomePageContentState extends State<HomePageContent> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       itemCount: (nearbyJobs.length / 2).ceil(),
                       itemBuilder: (context, columnIndex) {
-                        List<Map<String, dynamic>> sortedJobs = List.from(
-                          nearbyJobs,
-                        );
-                        if (_sortFilter == 'Nearest') {
-                          sortedJobs.sort((a, b) {
-                            double distA = double.parse(
-                              a['distance'].replaceAll(' km', ''),
-                            );
-                            double distB = double.parse(
-                              b['distance'].replaceAll(' km', ''),
-                            );
-                            return distA.compareTo(distB);
-                          });
-                        }
+                        final sortedJobs =
+                            List<Map<String, dynamic>>.from(nearbyJobs);
 
                         return Padding(
                           padding: const EdgeInsets.only(right: 12),
