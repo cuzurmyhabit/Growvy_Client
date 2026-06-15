@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../services/signup_repository.dart';
+import '../utils/interest_ids.dart';
 
 /// 회원가입 단계마다 사용자가 입력한 값을 한 곳에 누적했다가
 /// 마지막 SignupCompletePage 에서 한 번에 서버(DB)로 보낼 수 있게 해 주는 컨트롤러.
@@ -63,25 +64,6 @@ class SignupDataController extends GetxController {
 
   String? career; // SeekerCareerPage
   String? introduction; // SeekerCareerPage → 백엔드의 'bio'
-
-  // ---------------- 인터레스트 id 카테고리 ----------------
-  //
-  // 카테고리(EMPLOYMENT 31~35 포함) 는 SeekerInterestPage / SeekerSurveyPage
-  // 의 옵션 정의에서 직접 들고 다닌다. 여기서는 디버그/검증용 카테고리 정보만
-  // 유지한다 (백엔드 seed 와 동일).
-  static const Map<int, String> _interestCategoryById = <int, String>{
-    1: 'INDUSTRY', 2: 'INDUSTRY', 3: 'INDUSTRY', 4: 'INDUSTRY',
-    5: 'INDUSTRY', 6: 'INDUSTRY', 7: 'INDUSTRY', 8: 'INDUSTRY',
-    9: 'INDUSTRY', 10: 'INDUSTRY', 11: 'INDUSTRY',
-    12: 'ENERGY_STYLE', 13: 'ENERGY_STYLE', 14: 'ENERGY_STYLE',
-    15: 'WORK_ENVIRONMENT', 16: 'WORK_ENVIRONMENT', 17: 'WORK_ENVIRONMENT',
-    18: 'SOCIAL_PREFERENCE', 19: 'SOCIAL_PREFERENCE', 20: 'SOCIAL_PREFERENCE',
-    21: 'COMFORT_ZONE', 22: 'COMFORT_ZONE', 23: 'COMFORT_ZONE',
-    24: 'MAIN_GOAL', 25: 'MAIN_GOAL', 26: 'MAIN_GOAL', 27: 'MAIN_GOAL',
-    28: 'WORK_PACE', 29: 'WORK_PACE', 30: 'WORK_PACE',
-    31: 'EMPLOYMENT', 32: 'EMPLOYMENT', 33: 'EMPLOYMENT',
-    34: 'EMPLOYMENT', 35: 'EMPLOYMENT',
-  };
 
   // ---------------- Setter helpers ----------------
 
@@ -260,39 +242,46 @@ class SignupDataController extends GetxController {
   // ---------------- 직렬화 ----------------
 
   /// 백엔드 스펙에 맞춘 최종 payload (평탄한 구조).
+  ///
+  /// **빈 값 정책:** 빈 string / null / 0 인 필드는 키 자체를 생략한다.
+  /// 백엔드의 NOT NULL 컬럼이 빈 string 을 거부하거나 0 을 유효 FK 로
+  /// 잘못 해석하는 것을 막기 위함.
   Map<String, dynamic> toPayload() {
-    final base = <String, dynamic>{
-      'name': name ?? '',
-      'email': googleEmail ?? '',
-      'birthDate': _formatBirthDate(dateOfBirth),
-      'gender': _formatGender(gender),
-      'phone': phoneNumber ?? '',
-      'profileImageId': profileImageId ?? 0,
-    };
-    if (isEmployer == true) {
-      base.addAll(<String, dynamic>{
-        'companyName': companyName ?? '',
-        'businessAddress': businessAddress ?? '',
-      });
-    } else {
-      base.addAll(<String, dynamic>{
-        'homeAddress': homeAddress ?? '',
-        'career': career ?? '',
-        'bio': introduction ?? '',
-        // 페이지 단계에서 이미 백엔드 id 로 저장돼 있으므로 그대로 전송.
-        // 중복 제거 + 정렬 후 List<int> 형태로.
-        'interestIds':
-            (interestIds.toSet().toList()..sort()).toList(growable: false),
-      });
+    final m = <String, dynamic>{};
+    void put(String key, Object? value) {
+      if (value == null) return;
+      if (value is String && value.trim().isEmpty) return;
+      if (value is int && value == 0) return;
+      m[key] = value;
     }
-    return base;
+
+    put('name', name?.trim());
+    put('email', googleEmail?.trim());
+    put('birthDate', _formatBirthDate(dateOfBirth));
+    put('gender', _formatGender(gender));
+    put('phone', phoneNumber?.trim());
+    put('profileImageId', profileImageId);
+
+    if (isEmployer == true) {
+      put('companyName', companyName?.trim());
+      put('businessAddress', businessAddress?.trim());
+    } else {
+      put('homeAddress', homeAddress?.trim());
+      put('career', career?.trim());
+      put('bio', introduction?.trim());
+      // 페이지 단계에서 이미 백엔드 id 로 저장돼 있으므로 그대로 전송.
+      // 중복 제거 + 정렬 후 List<int> 형태로. (비어 있으면 키 자체 생략)
+      final ids = interestIds.toSet().toList()..sort();
+      if (ids.isNotEmpty) m['interestIds'] = ids;
+    }
+    return m;
   }
 
   /// 디버그/검증: 누적된 interestIds 가 각각 어느 카테고리인지 사람 읽기용으로.
   /// (예: [1, 3, 18] → 'INDUSTRY, INDUSTRY, SOCIAL_PREFERENCE')
   String describeInterestCategories() {
     return interestIds
-        .map((id) => _interestCategoryById[id] ?? 'UNKNOWN($id)')
+        .map((id) => IdCatalog.categoryOf(id)?.dbName ?? 'UNKNOWN($id)')
         .join(', ');
   }
 

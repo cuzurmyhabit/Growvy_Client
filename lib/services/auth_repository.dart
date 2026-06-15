@@ -72,9 +72,11 @@ class AuthRepository {
         '[AuthRepository] Token received: ${jwt != null} | Registered: $registered',
       );
 
-      // 2. 백엔드 자체 토큰(JWT) 저장
+      // 2. 백엔드 자체 토큰(JWT) 저장.
+      //    저장해두면 이후 ApiClient 의 _headers() 가 Firebase ID Token 대신
+      //    이 JWT 를 우선 Authorization 헤더에 싣는다.
       if (jwt != null && jwt.isNotEmpty) {
-        // await TokenStorage.saveAccessToken(jwt);
+        await TokenStorage.saveAccessToken(jwt);
 
         // 3. 가입된 유저라면 고용주 여부를 확인해서 기기에 저장.
         if (registered) {

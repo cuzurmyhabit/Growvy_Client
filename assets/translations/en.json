@@ -135,12 +135,20 @@
     "relaxed_steady": "Relaxed and steady",
     "depends_day": "Depends on the day"
   },
+  "employment_types": {
+    "casual": "Casual",
+    "part_time": "Part-time",
+    "full_time": "Full-time",
+    "contract": "Contract",
+    "temporary": "Temporary"
+  },
   "main": {
     "todays_task": "today's Task",
     "todays_task_dummy": "Part-time café job in Sydney",
     "calendar": "Calendar",
     "notification": "Notification",
     "job_postings_nearby": "Job postings nearby",
+    "customized_job_postings": "Customized Job Postings",
     "popular_jobs": "Popular Jobs",
     "nearest": "Nearest",
     "newest": "Newest",

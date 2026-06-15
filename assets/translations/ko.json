@@ -135,12 +135,20 @@
     "relaxed_steady": "여유롭고 꾸준한 페이스",
     "depends_day": "그날 그날 달라요"
   },
+  "employment_types": {
+    "casual": "캐주얼",
+    "part_time": "파트타임",
+    "full_time": "풀타임",
+    "contract": "계약직",
+    "temporary": "임시직"
+  },
   "main": {
     "todays_task": "오늘의 일정",
     "todays_task_dummy": "시드니의 파트타임 카페 일",
     "calendar": "캘린더",
     "notification": "알림",
     "job_postings_nearby": "내 주변 일자리",
+    "customized_job_postings": "맞춤형 일자리",
     "popular_jobs": "인기 일자리",
     "nearest": "가까운 순",
     "newest": "최신순",

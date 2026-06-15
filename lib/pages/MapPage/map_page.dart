@@ -289,8 +289,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       options: MapOptions(
         initialCenter: center,
         initialZoom: 15.0,
+        minZoom: 3.0,
+        maxZoom: 19.0,
+        // `InteractiveFlag.all` 은 두 손가락 회전(rotate) + 두 손가락 이동(pinchMove)
+        // 까지 함께 켜는데, 이게 핀치 줌 제스처와 충돌해서 손가락 확대/축소가
+        // 잘 안 잡히는 원인이 된다. 줌/드래그 관련 플래그만 명시적으로 켜 둠.
         interactionOptions: const InteractionOptions(
-          flags: InteractiveFlag.all,
+          flags: InteractiveFlag.drag |
+              InteractiveFlag.flingAnimation |
+              InteractiveFlag.pinchZoom |
+              InteractiveFlag.doubleTapZoom |
+              InteractiveFlag.doubleTapDragZoom |
+              InteractiveFlag.scrollWheelZoom,
+          // 두 손가락이 살짝만 벌어져도 바로 줌으로 인식되게.
+          pinchZoomThreshold: 0.2,
+          pinchZoomWinGestures:
+              MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove,
         ),
       ),
       children: [

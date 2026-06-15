@@ -1,8 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'dart:async';
 import 'dart:io';
-import '../../styles/colors.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../controllers/job_post_data_controller.dart';
 import '../../services/user_service.dart';
+import '../../styles/colors.dart';
 import '../../utils/auto_localize.dart';
 import '../../widgets/auto_translate_text.dart';
 import '../../widgets/confirm_modal.dart';
@@ -546,8 +551,36 @@ class _EmployerNoteWritePageState extends State<EmployerNoteWritePage> {
       context: context,
       message: 'Do you want to save draft it?',
       onAccept: () {
-        Navigator.pop(context);
-        Navigator.pop(context);
+        // 1) 현재 화면 값을 JobPostDataController 에 누적 (회원가입과 동일 패턴).
+        //    이 페이지는 간단 form 이라 industry / employmentType / schedule 시간 등은
+        //    set 하지 않고, 사용자가 다음 단계에서 보강하거나 별도 화면에서 채울 수 있게 둔다.
+        final jobPost = Get.find<JobPostDataController>();
+        jobPost
+          ..setBasicInfo(title: _titleController.text.trim())
+          ..setJobDetails(
+            responsibilities: _descriptionController.text.trim(),
+            scheduleDateRange: _scheduleDateController.text.trim(),
+            shiftDetails: _scheduleTimeController.text.trim(),
+            numberOfHires: _numberOfHires,
+          )
+          ..setPayBenefits(hourlyRate: _payController.text.trim())
+          ..setPhotos(_photos);
+
+        // 2) 백엔드로는 fire-and-forget. 응답 기다리지 않고 곧장 페이지 닫기.
+        unawaited(
+          jobPost.submitToBackend().then((created) {
+            debugPrint(
+              '[EmployerNoteWrite] (bg) draft submit 응답 — empty=${created.isEmpty}',
+            );
+          }).catchError((Object e) {
+            debugPrint('[EmployerNoteWrite] (bg) draft submit error: $e');
+          }),
+        );
+        // 다음 공고를 위해 누적값 초기화 (toPayload 는 호출 직후 평가됨).
+        jobPost.reset();
+
+        Navigator.pop(context); // 모달 닫기
+        Navigator.pop(context); // EmployerNoteWritePage 닫기
       },
     );
   }
