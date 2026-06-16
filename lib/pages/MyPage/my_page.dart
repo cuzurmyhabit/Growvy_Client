@@ -1,13 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/signup_data_controller.dart';
 import '../../controllers/user_profile_controller.dart';
-import '../../services/auth_repository.dart';
 import '../../widgets/auto_translate_text.dart';
 import '../../widgets/confirm_modal.dart';
-import '../SignUpPage/signup_page.dart';
+import '../SignUpPage/language_picker_page.dart';
 import 'profile_edit_page.dart';
 import 'review_page.dart';
 
@@ -316,7 +317,17 @@ class MyPageState extends State<MyPage> {
   /// — 외부 위젯 클래스로 분리해 SafeArea 안에서 const 로 재사용한다.
   /// 아래 [_SectionDivider] 참고.
 
-  /// Log Out 텍스트 탭 → 확인 모달 → 로그아웃 진행.
+  /// Log Out 텍스트 탭 → 확인 모달 → 한영 선택 → 웰컴 → 신규 가입 흐름
+  /// (역할 선택 → 이름/연락처 등 입력 → 가입 완료) 으로 이동.
+  ///
+  /// 사용자 요청: "로그아웃을 눌러도 구글 계정을 다시 선택할 필요 없이,
+  /// 한영 선택부터 새로 가입하듯 흐름이 진행되도록."
+  ///
+  /// 따라서 Firebase 세션은 그대로 두고 (= 같은 구글 계정 토큰 재활용),
+  /// 로컬에 누적된 역할/프로필/회원가입 입력값만 초기화한 뒤 isExistingUser=false
+  /// 로 한영 선택을 다시 보여준다. SignupCompletePage 의 백엔드 submit 가
+  /// 다시 동작하도록 SignupDataController 에 현재 Firebase 사용자 정보를
+  /// 다시 채워 둔다.
   Future<void> _onLogOutTap() async {
     final confirmed = await ConfirmModal.show<bool>(
       context: context,
@@ -325,16 +336,37 @@ class MyPageState extends State<MyPage> {
       onAccept: () => Navigator.pop(context, true),
     );
     if (confirmed != true || !mounted) return;
-    // 1) 로컬 사용자 타입 + 프로필 캐시 비우기.
+
+    // 1) 로컬 역할/프로필 캐시 비우기 → 신규 가입처럼 동작.
     await Get.find<AuthController>().clearUserType();
     await UserProfileController.to.clear();
-    // 2) Firebase signOut + secure storage 토큰 폐기.
-    await AuthRepository.signOut();
+
+    // 2) 회원가입 누적 데이터 reset + 현재 Firebase 사용자 정보로 재시드.
+    //    재시드는 SignupCompletePage 의 submitToBackend 가 firebaseIdToken /
+    //    googleEmail / googleUid / displayName 을 다시 쓰기 때문.
+    final signupData = Get.find<SignupDataController>();
+    signupData.reset();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final idToken = await user.getIdToken();
+        signupData.setGoogleAuth(
+          email: user.email,
+          displayName: user.displayName,
+          uid: user.uid,
+          idToken: idToken,
+        );
+      } catch (_) {
+        // 토큰 재발급에 실패해도 가입 흐름 자체는 진행되도록 무시.
+      }
+    }
     if (!mounted) return;
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const SignUpPage()),
-      (route) => false,
+
+    // 3) 한영 선택 → 웰컴 → SignInPage(역할 선택) → ... 의 신규 가입 흐름.
+    Get.offAll(
+      () => const LanguagePickerPage(isExistingUser: false),
+      transition: Transition.fadeIn,
+      duration: const Duration(milliseconds: 320),
     );
   }
 }

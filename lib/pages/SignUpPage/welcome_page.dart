@@ -1,16 +1,26 @@
 import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
 import '../../i18n/app_translations.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide Trans;
 import '../../styles/colors.dart';
-import 'signup_page.dart';
+import '../MainPage/main_page.dart';
+import 'signin_page.dart';
 
 /// 언어 선택 직후 잠깐 보였다가 자동으로 사라지는 인사말 페이지.
 ///
-/// iPhone 부팅 직후 "Hello" 화면처럼, "Welcome!"(또는 "환영합니다!") 텍스트가
-/// 페이드 인 → 잠시 유지 → 페이드 아웃 된 뒤 자연스러운 fade 트랜지션으로
-/// [SignUpPage] (구글 계정 선택) 로 이동한다.
+/// "Welcome!"(또는 "환영합니다!") 텍스트가 페이드 인 → 잠시 유지 →
+/// 페이드 아웃 된 뒤 자연스러운 fade 트랜지션으로 다음 화면으로 이동한다.
+///
+/// 다음 화면은 [isExistingUser] 에 따라 분기된다.
+/// - true  (= 이미 가입된 사용자, 로그아웃 후 재진입 등): [MainPage]
+/// - false (= 신규 사용자 또는 회원가입 흐름):                [SignInPage]
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({super.key, this.isExistingUser = false});
+
+  /// 이 흐름이 기존 회원의 재진입인지 여부.
+  /// 첫 진입(구글 로그인 후 신규 판정) 은 false,
+  /// 기존 회원 재로그인 / MyPage 의 로그아웃 후 재진입은 true.
+  final bool isExistingUser;
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
@@ -54,10 +64,21 @@ class _WelcomePageState extends State<WelcomePage>
 
   void _goNext() {
     if (!mounted) return;
+    // 기존 회원 → MainPage 로 곧장. (스택을 모두 비워 뒤로가기로 회원가입
+    //   화면으로 돌아가지 않도록 Get.offAll 사용.)
+    // 신규 사용자 → SignInPage (구인자/구직자 선택) 부터 회원가입 흐름.
+    if (widget.isExistingUser) {
+      Get.offAll(
+        () => const MainPage(),
+        transition: Transition.fadeIn,
+        duration: const Duration(milliseconds: 320),
+      );
+      return;
+    }
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 320),
-        pageBuilder: (_, _, _) => const SignUpPage(),
+        pageBuilder: (_, _, _) => const SignInPage(),
         transitionsBuilder: (_, animation, _, child) {
           return FadeTransition(opacity: animation, child: child);
         },

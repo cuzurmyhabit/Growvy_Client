@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide Trans;
+import '../../controllers/recent_searches_controller.dart';
 import '../../styles/colors.dart';
 import '../../widgets/auto_translate_text.dart';
 import '../../widgets/job_search_bar.dart';
@@ -32,18 +36,15 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
   bool _autoSave = true;
   bool _recentExpanded = true;
+  bool _isSearching = false;
+  Timer? _searchingTimer;
 
-  final List<String> _recentSearches = [
-    'Farm work',
-    'Farm',
-    'Cafe',
-    'Cafe staff',
-    'Hotel staff',
-    'Hotel',
-    'Warehouse',
-  ];
+  /// 페이지 외부에 살아있는 single source-of-truth.
+  /// 메인으로 나갔다가 다시 들어와도 동일한 칩 목록이 보인다.
+  RecentSearchesController get _recents => RecentSearchesController.to;
 
   final List<Map<String, dynamic>> _popularSearches = [
     {'title': 'Barista', 'trending': true, 'orange': true},
@@ -57,31 +58,49 @@ class _SearchPageState extends State<SearchPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // 검색창에서 포커스를 잃을 때 (예: 사용자가 검색키를 누르지 않고
+    // 다른 영역을 터치) 도 마지막 입력값을 recent 에 자동 저장한다.
+    _searchFocus.addListener(_handleFocusChange);
+  }
+
+  @override
   void dispose() {
+    _searchFocus.removeListener(_handleFocusChange);
+    _searchFocus.dispose();
     _searchController.dispose();
+    _searchingTimer?.cancel();
     super.dispose();
   }
 
-  /// 검색창에서 enter / 검색 키를 눌렀을 때.
-  /// - autoSave 가 켜져 있고 빈 문자열이 아니면 _recentSearches 상단에 삽입.
-  /// - 같은 단어가 이미 있으면 그것을 위로 끌어올리고 중복은 피한다.
-  /// - 최대 20개까지만 유지해서 무한히 늘어나는 것을 방지.
+  void _handleFocusChange() {
+    if (_searchFocus.hasFocus) return;
+    _saveCurrentTerm(_searchController.text);
+  }
+
+  /// 검색창에서 enter / 검색 키를 눌렀을 때 또는 칩을 탭했을 때.
+  /// 1) recent 목록에 저장 (중복 제거 + 최상단 정렬 + 20개 캡)
+  /// 2) 검색 중임을 알리는 짧은 spinner 피드백 (실제 결과 페이지는 추후)
   void _onSearchSubmitted(String raw) {
+    final term = _saveCurrentTerm(raw);
+    if (term == null) return;
+    // 검색이 실제로 일어났다는 시각 피드백.
+    _searchingTimer?.cancel();
+    setState(() => _isSearching = true);
+    _searchingTimer = Timer(const Duration(milliseconds: 500), () {
+      if (mounted) setState(() => _isSearching = false);
+    });
+    // TODO: 실제 검색 결과 페이지로 이동. 데모 단계라 검색어 저장과
+    // 시각 피드백만 처리한다.
+  }
+
+  /// 현재 입력을 recent 목록에 저장한다. 저장이 일어났다면 그 term 을, 아니면 null.
+  String? _saveCurrentTerm(String raw) {
     final term = raw.trim();
-    if (term.isEmpty) return;
-    if (_autoSave) {
-      setState(() {
-        _recentSearches.removeWhere(
-          (existing) => existing.toLowerCase() == term.toLowerCase(),
-        );
-        _recentSearches.insert(0, term);
-        if (_recentSearches.length > 20) {
-          _recentSearches.removeRange(20, _recentSearches.length);
-        }
-      });
-    }
-    // TODO: 실제 검색 결과 페이지로 이동. 현재는 데모 데이터만 보여주므로
-    // 검색어 저장만 처리하고 검색창에 입력값은 유지한다.
+    if (term.isEmpty) return null;
+    if (_autoSave) _recents.add(term);
+    return term;
   }
 
   @override
@@ -126,7 +145,9 @@ class _SearchPageState extends State<SearchPage> {
                   child: Center(
                     child: JobSearchBar.field(
                       controller: _searchController,
+                      focusNode: _searchFocus,
                       autofocus: true,
+                      isSearching: _isSearching,
                       onChanged: (_) => setState(() {}),
                       onSubmitted: _onSearchSubmitted,
                     ),
@@ -203,10 +224,10 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      Wrap(
+                      Obx(() => Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: _recentSearches.map((term) {
+                        children: _recents.recents.map((term) {
                           return Material(
                             color: Colors.transparent,
                             child: InkWell(
@@ -234,7 +255,10 @@ class _SearchPageState extends State<SearchPage> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    AutoTranslateText(
+                                    // 사용자가 친 키워드 ("farm", "cafe" 등)
+                                    // 가 한국어 등으로 자동 번역되지 않고
+                                    // 원본 그대로 표시되도록 일반 Text 사용.
+                                    Text(
                                       term,
                                       style: const TextStyle(
                                         fontSize: 14,
@@ -248,10 +272,7 @@ class _SearchPageState extends State<SearchPage> {
                                     // 않도록 GestureDetector 기본 동작에 맡긴다.
                                     GestureDetector(
                                       behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        setState(() =>
-                                            _recentSearches.remove(term));
-                                      },
+                                      onTap: () => _recents.remove(term),
                                       child: const Icon(
                                         Icons.close,
                                         size: 16,
@@ -264,7 +285,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           );
                         }).toList(),
-                      ),
+                      )),
                       const SizedBox(height: 8),
                       Center(
                         child: GestureDetector(
@@ -280,9 +301,7 @@ class _SearchPageState extends State<SearchPage> {
                       const SizedBox(height: 4),
                       Center(
                         child: GestureDetector(
-                          onTap: () {
-                            setState(() => _recentSearches.clear());
-                          },
+                          onTap: _recents.clearAll,
                           child: const AutoTranslateText(
                             'delete all',
                             style: TextStyle(
