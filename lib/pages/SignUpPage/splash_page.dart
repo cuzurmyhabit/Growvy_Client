@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'language_picker_page.dart';
+import 'signup_page.dart';
 
 /// 스플레시 화면. 구글 로그인 화면과 동일한 레이아웃(배경 + 로고)에서 버튼만 제외.
-/// 표시 후 곧장 [LanguagePickerPage] 로 이동한다.
+/// 표시 후 곧장 [SignUpPage] (구글 로그인) 로 이동한다.
 ///
-/// 새 흐름: Splash → LanguagePicker → Welcome → SignUp(Google) → SignIn.
-/// 언어를 가장 먼저 골라야 이후 모든 화면이 선택한 언어로 빌드된다.
+/// 새 흐름: Splash → SignUp(Google) → LanguagePicker → Welcome →
+///         (신규: SignIn / 기존: MainPage).
+/// 구글로 먼저 로그인해 사용자를 식별한 뒤 한영을 선택하게 한다.
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -29,7 +30,7 @@ class _SplashPageState extends State<SplashPage> {
         context,
         PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 380),
-          pageBuilder: (_, _, _) => const LanguagePickerPage(),
+          pageBuilder: (_, _, _) => const SignUpPage(),
           transitionsBuilder: (_, animation, _, child) =>
               FadeTransition(opacity: animation, child: child),
         ),

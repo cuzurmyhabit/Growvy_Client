@@ -1,6 +1,8 @@
 import '../i18n/app_translations.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide Trans;
 
+import '../controllers/recent_searches_controller.dart';
 import '../pages/MainPage/job_detail_page.dart';
 import '../styles/colors.dart';
 import 'auto_translate_text.dart';
@@ -23,6 +25,7 @@ class SearchOverlayState extends State<SearchOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final TextEditingController _searchController;
+  late final FocusNode _searchFocus;
   bool _autoSave = true;
   bool _recentExpanded = false;
   bool _closing = false;
@@ -34,48 +37,88 @@ class SearchOverlayState extends State<SearchOverlay>
   static const int _collapsedTagCount = 5;
 
   /// 임시 검색 결과 데이터 — 추후 API 연동.
+  /// 각 카드를 탭하면 [_openResultDetail] 가 이 map 의 필드를 그대로 JobDetailPage
+  /// 에 전달한다. (백엔드 연동 전이라 location/payText/openingsText/description
+  /// 같은 보조 필드도 의도적으로 채워서 디테일 페이지가 풍성하게 보이게 함.)
   final List<Map<String, dynamic>> _results = const [
     {
       'title': 'Restaurant staff',
       'company': 'Aussie Bite',
       'tags': ['NEW', 'D-32', 'Veteran'],
+      'scheduleDate': 'Feb 02, 2026 - Feb 28, 2026',
+      'location': '88 King St, Sydney NSW 2000',
+      'payText': '\$30 / hour',
+      'openingsText': '2 openings.',
+      'description':
+          'Busy modern Australian restaurant looking for friendly front-of-'
+          'house staff for the dinner shift.',
     },
     {
       'title': 'Farm work',
       'company': "Will's fram",
       'tags': ['NEW', 'D-22', 'Veteran'],
+      'scheduleDate': 'Feb 10, 2026 - Apr 10, 2026',
+      'location': 'Mildura VIC 3500',
+      'payText': '\$28 / hour',
+      'openingsText': '5 openings.',
+      'description':
+          'Seasonal fruit picking on a family-run farm. Accommodation can be '
+          'arranged. Backpackers welcome.',
     },
     {
       'title': 'Café job',
       'company': 'This is for you Jane',
       'tags': ['NEW', 'D-11', 'Rookie'],
+      'scheduleDate': 'Feb 12, 2026 - May 12, 2026',
+      'location': '210 Chapel St, South Yarra VIC 3141',
+      'payText': '\$27 / hour',
+      'openingsText': '2 openings.',
+      'description':
+          'Cosy specialty cafe hiring weekend baristas + cashiers. Training '
+          'provided for the right person.',
     },
     {
       'title': 'Record Shop Employee',
       'company': 'People needs Rabbit!',
       'tags': ['HOT', 'D-8', 'Rookie'],
+      'scheduleDate': 'Feb 03, 2026 - Aug 03, 2026',
+      'location': '15 King Street, Newtown NSW 2042',
+      'payText': '\$26 / hour',
+      'openingsText': '1 opening.',
+      'description':
+          "Newtown's favourite indie record shop is looking for a music lover "
+          'to help our customers find their next favourite album.',
     },
     {
       'title': 'Restaurant Staff',
       'company': 'Hopkins Night',
       'tags': ['NEW', 'D-16', 'Veteran'],
+      'scheduleDate': 'Feb 06, 2026 - Mar 30, 2026',
+      'location': '99 Hardware Lane, Melbourne VIC 3000',
+      'payText': '\$31 / hour',
+      'openingsText': '3 openings.',
+      'description':
+          'Upmarket steakhouse hiring experienced floor staff for the dinner '
+          'service (Wed–Sun).',
     },
     {
       'title': 'Babysitter',
       'company': 'Dustin Byers',
       'tags': ['NEW', 'D-13', 'Rookie'],
+      'scheduleDate': 'Feb 14, 2026 - Apr 14, 2026',
+      'location': 'Bondi Beach NSW 2026',
+      'payText': '\$32 / hour',
+      'openingsText': '1 opening.',
+      'description':
+          'Looking for a kind, reliable babysitter for two kids (5, 7) on '
+          'weekday evenings.',
     },
   ];
 
-  final List<String> _recentSearches = [
-    'Farm work',
-    'Farm',
-    'Cafe',
-    'Cafe staff',
-    'Hotel staff',
-    'Hotel',
-    'Warehouse',
-  ];
+  /// 페이지 외부에 살아있는 single source-of-truth.
+  /// SearchPage 와 같은 인스턴스를 공유해, 메인으로 나갔다가 다시 검색을 열어도
+  /// 사용자가 입력했던 키워드 ("ㅇㅇ" 등) 가 그대로 칩으로 남아 있다.
+  RecentSearchesController get _recents => RecentSearchesController.to;
 
   final List<Map<String, dynamic>> _popularSearches = const [
     {'title': 'Barista', 'trending': true},
@@ -97,13 +140,24 @@ class SearchOverlayState extends State<SearchOverlay>
       reverseDuration: const Duration(milliseconds: 300),
     )..forward();
     _searchController = TextEditingController();
+    _searchFocus = FocusNode();
+    // 사용자가 검색 키를 누르지 않고 다른 영역을 터치해 검색창 포커스가
+    // 빠질 때도 마지막 입력값을 recent 에 자동 저장해 둔다.
+    _searchFocus.addListener(_handleFocusChange);
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _searchController.dispose();
+    _searchFocus.removeListener(_handleFocusChange);
+    _searchFocus.dispose();
     super.dispose();
+  }
+
+  void _handleFocusChange() {
+    if (_searchFocus.hasFocus) return;
+    _saveTerm(_searchController.text);
   }
 
   /// 외부(메인 페이지의 탭 전환 등)에서 호출하여 부드럽게 닫기.
@@ -117,23 +171,44 @@ class SearchOverlayState extends State<SearchOverlay>
   }
 
   void _submitSearch(String query) {
-    final q = query.trim();
-    if (q.isEmpty) return;
-    setState(() {
-      // 최근 검색어 맨 앞에 추가 (중복 제거)
-      _recentSearches.remove(q);
-      _recentSearches.insert(0, q);
-      _showResults = true;
-    });
+    final q = _saveTerm(query);
+    if (q == null) return;
+    setState(() => _showResults = true);
+  }
+
+  /// 입력값을 recent 목록 맨 위에 추가한다. 컨트롤러가 중복 제거 + 최대
+  /// 길이 cap + 디스크 저장까지 모두 처리. autoSave OFF 면 저장은 생략.
+  String? _saveTerm(String raw) {
+    final q = raw.trim();
+    if (q.isEmpty) return null;
+    if (_autoSave) _recents.add(q);
+    return q;
   }
 
   Future<void> _openRegionModal() async {
     await RegionModal.show(context);
   }
 
-  void _goToJobDetail() {
+  /// 결과 카드 탭/Apply 버튼 → 해당 job 의 정보를 그대로 [JobDetailPage] 에 전달.
+  /// (이전에는 항상 default 더미 'Sadie\'s HotPot' 만 나오던 문제 수정)
+  void _openResultDetail(Map<String, dynamic> item) {
+    final tagsRaw = item['tags'];
+    final tags = tagsRaw is List
+        ? tagsRaw.map((e) => e.toString()).toList()
+        : <String>[];
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const JobDetailPage()),
+      MaterialPageRoute(
+        builder: (_) => JobDetailPage(
+          title: item['title'] as String?,
+          companyName: item['company'] as String?,
+          tags: tags,
+          scheduleDate: item['scheduleDate'] as String?,
+          location: item['location'] as String?,
+          payText: item['payText'] as String?,
+          openingsText: item['openingsText'] as String?,
+          description: item['description'] as String?,
+        ),
+      ),
     );
   }
 
@@ -179,6 +254,7 @@ class SearchOverlayState extends State<SearchOverlay>
                     child: Center(
                       child: JobSearchBar.field(
                         controller: _searchController,
+                        focusNode: _searchFocus,
                         autofocus: true,
                         onChanged: (_) => setState(() {}),
                         onSubmitted: _submitSearch,
@@ -220,10 +296,10 @@ class SearchOverlayState extends State<SearchOverlay>
   }
 
   Widget _buildContent() {
-    final hasMore = _recentSearches.length > _collapsedTagCount;
-
     return SingleChildScrollView(
-      child: Column(
+      child: Obx(() {
+        final hasMore = _recents.recents.length > _collapsedTagCount;
+        return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
@@ -261,7 +337,7 @@ class SearchOverlayState extends State<SearchOverlay>
           const SizedBox(height: 8),
           Center(
             child: GestureDetector(
-              onTap: () => setState(() => _recentSearches.clear()),
+              onTap: _recents.clearAll,
               child: const AutoTranslateText(
                 'delete all',
                 style: TextStyle(
@@ -293,7 +369,8 @@ class SearchOverlayState extends State<SearchOverlay>
           ),
           const SizedBox(height: 24),
         ],
-      ),
+      );
+      }),
     );
   }
 
@@ -353,9 +430,10 @@ class SearchOverlayState extends State<SearchOverlay>
   }
 
   Widget _buildRecentTags() {
+    final all = _recents.recents;
     final visibleTags = _recentExpanded
-        ? _recentSearches
-        : _recentSearches.take(_collapsedTagCount).toList();
+        ? all.toList()
+        : all.take(_collapsedTagCount).toList();
 
     return Wrap(
       spacing: 10,
@@ -395,8 +473,8 @@ class SearchOverlayState extends State<SearchOverlay>
                 title: item['title'] as String,
                 company: item['company'] as String,
                 tags: List<String>.from(item['tags'] as List),
-                onTap: _goToJobDetail,
-                onApply: _goToJobDetail,
+                onTap: () => _openResultDetail(item),
+                onApply: () => _openResultDetail(item),
               );
             },
           ),
@@ -430,37 +508,55 @@ class SearchOverlayState extends State<SearchOverlay>
   }
 
   Widget _buildTag(String term) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFFD9D9D9).withValues(alpha: 0.4),
-          width: 1,
+        // 칩 본체를 탭하면 검색창에 그 키워드를 채우고 검색을 트리거한다.
+        // (X 아이콘은 별도 GestureDetector + HitTestBehavior.opaque 로
+        // 이 InkWell 이 같이 호출되지 않도록 한다.)
+        onTap: () {
+          _searchController.text = term;
+          _searchController.selection =
+              TextSelection.collapsed(offset: term.length);
+          _submitSearch(term);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: const Color(0xFFD9D9D9).withValues(alpha: 0.4),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 사용자가 친 키워드는 자동 번역하지 않고 원문 그대로 표시.
+              Text(
+                term,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFFA3A3A3),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(width: 6),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _recents.remove(term),
+                child: const Icon(
+                  Icons.close,
+                  size: 16,
+                  color: Color(0xFFA3A3A3),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AutoTranslateText(
-            term,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFFA3A3A3),
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          const SizedBox(width: 6),
-          GestureDetector(
-            onTap: () => setState(() => _recentSearches.remove(term)),
-            child: const Icon(
-              Icons.close,
-              size: 16,
-              color: Color(0xFFA3A3A3),
-            ),
-          ),
-        ],
       ),
     );
   }

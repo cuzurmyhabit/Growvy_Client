@@ -425,7 +425,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
   }
 
   /// 상단 우측: 본인 공고용. 디자인 자체가 흰 원 배경 + 그림자까지 포함되어
-  /// 있으므로 별도 컨테이너 없이 SVG/PNG 를 그대로 보여 준다.
+  /// 있으므로 별도 컨테이너 없이 SVG / PNG 를 그대로 보여 준다.
   ///
   /// 주의: `jobdetail_delete_icon.svg` 파일은 확장자만 .svg 이고 실제 내용이
   /// PNG (Figma export 누락) 이므로 `Image.asset` 으로 그려야 한다.

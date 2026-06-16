@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/job_post_data_controller.dart';
+import '../controllers/recent_searches_controller.dart';
 import '../controllers/signup_data_controller.dart';
 import '../controllers/user_profile_controller.dart';
 
@@ -23,5 +24,11 @@ class InitialBinding extends Bindings {
       permanent: true,
     );
     profileCtrl.loadFromCache();
+    // 최근 검색어는 SearchPage(별도 페이지) / SearchOverlay(메인 위 오버레이)
+    // 두 화면이 공유한다. 페이지 진입/이탈에 무관하게 유지되도록 permanent.
+    Get.put<RecentSearchesController>(
+      RecentSearchesController(),
+      permanent: true,
+    );
   }
 }
