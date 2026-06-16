@@ -7,8 +7,7 @@ import 'package:get/get.dart' hide Trans;
 import '../../controllers/signup_data_controller.dart';
 import '../../services/auth_repository.dart';
 import '../../services/token_storage.dart';
-import 'signin_page.dart';
-import '../MainPage/main_page.dart'; // 💡 메인 페이지 import 추가 (경로는 프로젝트 구조에 맞게 확인해주세요)
+import 'language_picker_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -74,27 +73,19 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if (!mounted) return;
 
-      // 💡 가입 여부에 따른 페이지 이동 분기 처리
-      if (isRegistered) {
-        // 🟢 기존 회원이면 MainPage 로 이동
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const MainPage(), // 메인 페이지 클래스명에 맞게 수정
-          ),
-        );
-      } else {
-        // 🟡 신규 회원이면 추가 정보 입력(SignInPage) 로 이동
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 320),
-            pageBuilder: (_, _, _) => const SignInPage(),
-            transitionsBuilder: (_, animation, _, child) =>
-                FadeTransition(opacity: animation, child: child),
-          ),
-        );
-      }
+      // 💡 가입 여부와 무관하게 한영 선택 → 웰컴 흐름을 거친다.
+      //    LanguagePickerPage 에 isExistingUser flag 를 함께 전달해
+      //    웰컴 직후 최종 도달지(MainPage / SignInPage) 를 분기한다.
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 320),
+          pageBuilder: (_, _, _) =>
+              LanguagePickerPage(isExistingUser: isRegistered),
+          transitionsBuilder: (_, animation, _, child) =>
+              FadeTransition(opacity: animation, child: child),
+        ),
+      );
     } catch (e) {
       debugPrint('[SignUp] Google login error: $e');
       if (!mounted) return;

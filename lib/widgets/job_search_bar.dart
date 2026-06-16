@@ -19,7 +19,8 @@ class JobSearchBar extends StatelessWidget {
         isSearching = false,
         onSubmitted = null,
         onChanged = null,
-        autofocus = false;
+        autofocus = false,
+        focusNode = null;
 
   const JobSearchBar.field({
     super.key,
@@ -30,6 +31,7 @@ class JobSearchBar extends StatelessWidget {
     this.autofocus = false,
     this.width,
     this.hintText,
+    this.focusNode,
   }) : onTap = null;
 
   final VoidCallback? onTap;
@@ -39,6 +41,7 @@ class JobSearchBar extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool autofocus;
   final double? width;
+  final FocusNode? focusNode;
 
   /// null 이면 기본 i18n hint('search.search_hint') 가 표시된다.
   final String? hintText;
@@ -106,6 +109,7 @@ class JobSearchBar extends StatelessWidget {
   Widget _textField() {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       autofocus: autofocus,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(

@@ -12,7 +12,11 @@ import 'welcome_page.dart';
 /// `kStaticEnglishStrings` 목록을 백그라운드에서 번역기에 미리 캐시해두어,
 /// Welcome 이후 모든 화면에서 영어가 한 순간도 보이지 않도록 만든다.
 class TranslationLoadingPage extends StatefulWidget {
-  const TranslationLoadingPage({super.key});
+  const TranslationLoadingPage({super.key, this.isExistingUser = false});
+
+  /// LanguagePickerPage 에서 받은 값. WelcomePage 로 그대로 전달해
+  /// 인사말 직후 MainPage 로 갈지 SignInPage 로 갈지를 결정.
+  final bool isExistingUser;
 
   @override
   State<TranslationLoadingPage> createState() => _TranslationLoadingPageState();
@@ -77,7 +81,8 @@ class _TranslationLoadingPageState extends State<TranslationLoadingPage> {
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 380),
-        pageBuilder: (_, _, _) => const WelcomePage(),
+        pageBuilder: (_, _, _) =>
+            WelcomePage(isExistingUser: widget.isExistingUser),
         transitionsBuilder: (_, animation, _, child) =>
             FadeTransition(opacity: animation, child: child),
       ),
